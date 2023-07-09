@@ -1,0 +1,74 @@
+type StatusCode = nat;
+type Response_1 = 
+ record {
+   body: ResponseStatus_1;
+   message: text;
+   status: bool;
+   status_code: StatusCode;
+ };
+type ResponseStatus_1 = 
+ variant {
+   err: record {};
+   success: ConfirmInvoiceBody__1;
+ };
+type ResponseStatus = 
+ variant {
+   err: record {};
+   success: CreateInvoiceBody__1;
+ };
+type Response = 
+ record {
+   body: ResponseStatus;
+   message: text;
+   status: bool;
+   status_code: StatusCode;
+ };
+type Invoice = 
+ record {
+   amount: float64;
+   createdAt: int;
+   currency: text;
+   id: nat;
+   owner: principal;
+   paymentLink: text;
+   paymentMethod: text;
+   status: text;
+   transactionId: text;
+ };
+type CreateInvoiceBody__1 = 
+ record {
+   id: nat;
+   payment: record {
+              redirectUrl: text;
+              transactionId: text;
+            };
+ };
+type CreateInvoiceBody = 
+ record {
+   amount: float64;
+   currency: text;
+   paymentMethod: text;
+ };
+type ConfirmInvoiceBody__1 = 
+ record {
+   invoiceNo: nat;
+   paymentMethod: text;
+   status: text;
+   transactionId: text;
+ };
+type ConfirmInvoiceBody = 
+ record {
+   invoiceNo: nat;
+   isSuccess: bool;
+   paymentMethod: text;
+ };
+service : {
+  change_invoice_status: (ConfirmInvoiceBody) -> (Response_1);
+  create_invoice: (CreateInvoiceBody) -> (Response);
+  getOwner: () -> (text);
+  get_actor_id_as_text: () -> (text) query;
+  get_all_invoices_to_admin: () -> (vec Invoice);
+  get_my_invoices: () -> (vec Invoice) query;
+  invoiceCount: () -> (nat);
+  isOwner: () -> (bool) query;
+}
