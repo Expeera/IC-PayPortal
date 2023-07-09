@@ -38,7 +38,7 @@ module {
             };
         };
 
-        public func create_session(invoiceNo:Nat, invoice : Types.Request.CreateInvoiceBody) : async Result.Result<?CreateSession, ?ErrorResponse>  {
+         public func create_session(invoiceNo:Nat, invoice : Types.Request.CreateInvoiceBody) : async Result.Result<?CreateSession, ?ErrorResponse>  {
             // Set the request headers
             let request_headers = [
                 {   name = "Content-Type";     value = "application/x-www-form-urlencoded" },
