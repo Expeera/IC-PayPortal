@@ -54,7 +54,7 @@ actor Fiat {
     public shared ({ caller }) func create_invoice(invoice : Types.Request.CreateInvoiceBody) : async Http.Response<Http.ResponseStatus<Types.Response.CreateInvoiceBody, {}>> {
         // Check if the caller is anonymous
         if (Validation.isAnonymous(caller)) {
-            return Utils.generalResponse(false, Messages.not_authorized_to_confirm_invoice, #err({}), Http.Status.UnprocessableEntity);
+            return Utils.generalResponse(false, Messages.not_authorized, #err({}), Http.Status.UnprocessableEntity);
         }
         // Check if the payment method is empty
         else if (Validation.isEmpty(invoice.paymentMethod)) {
@@ -182,7 +182,7 @@ actor Fiat {
     public shared({caller}) func change_invoice_status (invoiceReq: Types.Request.ConfirmInvoiceBody) : async Http.Response<Http.ResponseStatus<Types.Response.ConfirmInvoiceBody, {}>> {
         // Check if the caller is anonymous
         if (Validation.isAnonymous(caller)) {
-            return Utils.generalResponse(false, Messages.not_authorized_to_confirm_invoice, #err({}), Http.Status.UnprocessableEntity);
+            return Utils.generalResponse(false, Messages.not_authorized, #err({}), Http.Status.UnprocessableEntity);
         }
         // Check if the payment method is empty
         else if (Validation.isEmpty(invoiceReq.paymentMethod)) {
