@@ -67,3 +67,5 @@ The Fiat Payment Module offers the following features:
 6. To generate Typescript type `npm run generate:types`
 
 7. Run `npm run dev`
+
+8. To test run `sh test/demo.sh`
