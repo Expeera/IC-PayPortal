@@ -87,7 +87,7 @@ export default function Admin() {
               {invoices.map((item) => (
                 <tr key={item.id}>
                   <td>{parseInt(item.id)}</td>
-                  <td>{item.amount}</td>
+                  <td>{item.owner.toString()}</td>
                   <td>{item.amount}</td>
                   <td>{item.currency}</td>
                   <td>{item.paymentMethod}</td>

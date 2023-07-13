@@ -34,7 +34,7 @@ actor Fiat {
     private stable var ownerInvoicesTrie : Trie.Trie<Principal, List.List<Nat>> = Trie.empty();
 
     // Owner's identifier
-    private var owner:Text = "y7l3v-ohvp4-dl6mk-vc7bw-5oaqe-7jto7-okfcm-dyjym-olwfs-qzyri-hae";
+    private var owner:Text = "ce3oe-5x3qd-tjgui-rteiu-qmodi-auwyb-ktn4d-t2yaw-6s56p-tbwuw-3ae";
 
     // Owner's identifier
     public func getOwner() : async Text {
