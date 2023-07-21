@@ -153,6 +153,7 @@ actor Fiat {
                 owner = caller;
                 amount = invoice.amount;
                 status = Types.InvoiceStatus.Pending;
+                items = invoice.items;
                 transactionId = _session.id;
                 paymentLink = _session.url;
                 paymentMethod = payment;
@@ -350,6 +351,7 @@ actor Fiat {
                 case(true)  Types.InvoiceStatus.Completed;
                 case(false) Types.InvoiceStatus.Cancelled;
             };
+            items = invoiceFind.items;
             transactionId = invoiceFind.transactionId;
             paymentLink = invoiceFind.paymentLink;
             paymentMethod = invoiceFind.paymentMethod;
@@ -384,13 +386,13 @@ actor Fiat {
         Principal.toText(Principal.fromActor(Fiat));
     };
 
-    public  func create() : async Result.Result<?Service.Paypal.CreateSession, ?Service.Paypal.ErrorResponse>{
-        await Service.Paypal.create_session(100 , {
-            amount  = 100;
-            paymentMethod = "paypal";
-            currency ="usd";
-        });
-    };
+    // public  func create() : async Result.Result<?Service.Paypal.CreateSession, ?Service.Paypal.ErrorResponse>{
+    //     await Service.Paypal.create_session(100 , {
+    //         amount  = 100;
+    //         paymentMethod = "paypal";
+    //         currency ="usd";
+    //     });
+    // };
     
 
     public func test1(txt:Text) : async Text {

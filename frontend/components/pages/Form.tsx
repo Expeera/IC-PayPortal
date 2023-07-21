@@ -9,18 +9,50 @@ export interface CreateInvoiceBody {
   amount: number
   paymentMethod: string
   currency: string
+  items: [{
+    id: number;
+    name: string;
+    price:number
+  }]
 }
 
 
 export default function Form() {
+
+  const [currency, setCurrency] = useState("USD");
+
   const { logout, isAuthenticated, actor, isOwner } = useContext(AppContext)
   const [formData, setFormData] = useState({
     paymentMethod: "",
     amount: '',
-    currency: "",
+    currency: currency,
   })
   const navigate = useNavigate()
   const sessionId = 1000
+
+
+  const [products, setProducts] = useState([
+    { id: 1, name: "Prodct 1", price: (10 + (Math.random() * (190))).toFixed(2) },
+    { id: 2, name: "Prodct 2", price: (10 + (Math.random() * (190))).toFixed(2) },
+    { id: 3, name: "Prodct 3", price: (10 + (Math.random() * (190))).toFixed(2) },
+    { id: 4, name: "Prodct 4", price: (10 + (Math.random() * (190))).toFixed(2) }
+  ]);
+
+  const [cart, setCart] = useState([]);
+
+  const addToCart = (product) => {
+    // Check if the product already exists in the cart
+    const existingProduct = cart.find((item) => item.id === product.id);
+
+    if (existingProduct) {
+      toast.error(`${product.name} is already in the cart.`)
+    } else {
+      // Product does not exist in the cart, add it with a quantity property set to 1
+      setCart([...cart, { ...product }]);
+      toast.success(`${product.name} added successfully.`)
+
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -28,6 +60,11 @@ export default function Form() {
       ...prevFormData,
       [name]: value,
     }))
+
+    if (name == "currency") {
+      setCurrency(value)
+    }
+
   }
 
   const handleSubmit = (e) => {
@@ -37,6 +74,7 @@ export default function Form() {
       amount: parseFloat(formData.amount.toString()),
       paymentMethod: formData.paymentMethod,
       currency: formData.currency,
+      items: carts
     }
 
     actor.create_invoice(data)
@@ -99,15 +137,38 @@ export default function Form() {
   }
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        // height: "700px",
-        justifyContent: "center",
-      }}
-    > 
+    <div>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          // height: "700px",
+          justifyContent: "center",
+        }}
+      >
+      
+        
+
+        {products.map((product) => (
+          <div style={{ margin: "5px 30px", textAlign: "center" }}>
+            <h3>{product.name}</h3>
+            <h3>{product.price} {currency}</h3>
+            <button onClick={e => addToCart(product)}>add To Cart</button>
+          </div>
+        ))}
+
+      </div>
+        
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            // height: "700px",
+            justifyContent: "center",
+          }}
+        > 
       <h2>Create New Invoice</h2>
       <form
         style={{
@@ -140,6 +201,7 @@ export default function Form() {
           value={formData.amount}
           onChange={handleChange}
           placeholder="Amount"
+          disabled
           style={{
             marginBottom: "10px",
             padding: "5px 2px",
@@ -161,9 +223,8 @@ export default function Form() {
             borderRadius: "8px",
           }}
         >
-          <option value="default">Select currency</option>
-          <option value="usd">USD</option>
-          <option value="eur">EUR</option>
+          <option value="USD">USD</option>
+          <option value="EUR">EUR</option>
         </select>
         <button
           type="submit"
@@ -230,6 +291,7 @@ export default function Form() {
         </div>
       </div>
 
+      </div>
     </div>
   )
 }
