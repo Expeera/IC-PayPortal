@@ -149,9 +149,7 @@ module {
     public module Paypal {
         private let base_url = "https://api-m.sandbox.paypal.com/";
         private let client_id:Text = "AZUPT0s8SzC8SkFaBNRzOnVPIr4cZ6XcgiIaXtWFtTMlp2ePzJlfHvoZp0IaxOvlI9nk8aljvlcaihxR";
-        private let client_secret:Text = "EFx8zu_5VtYja8nXx6Xs8BPJOepsALxXHvCIjWlKKOAx8UKIXlXwfWx-8Ai6DaUq4zt9hKsk33keit1x";
-        private let request_id:Text = "b75638a2-b50a-4b39-bd0b-dd713711c881";
-       
+        private let client_secret:Text = "EFx8zu_5VtYja8nXx6Xs8BPJOepsALxXHvCIjWlKKOAx8UKIXlXwfWx-8Ai6DaUq4zt9hKsk33keit1x";       
 
         public type ErrorResponse = {
             error                : Text;
@@ -211,8 +209,6 @@ module {
 
                             let request_headers = [
                                 { name= "Content-Type"; value = "application/json" },
-                                // { name= "PayPal-Request-Id"; value = request_id },
-                                // { name= "Authorization"; value = "Bearer A21AAL9NwDbjFaMdB033byPJJPZ3-G-MxmwHMAvf3B0DlMXKsY9gqX1fK5xafAyXE2PFTl7svKhNXYSOEzzoeon7dK-qjhQlA" }
                                 { name= "Authorization"; value = "Bearer " # _session.access_token }
                             ];
 
@@ -347,7 +343,6 @@ module {
                             // Set the request headers
                             let request_headers = [
                                 { name= "Content-Type"; value = "application/json" },
-                                { name= "PayPal-Request-Id"; value = request_id },
                                 { name= "Authorization"; value = "Bearer " # _session.access_token }
                             ];
 
@@ -382,13 +377,9 @@ module {
                             return switch(session){
                                 case(null) {
                                     let errResponse : ?ErrorResponse = from_candid(blob);
-                                                                Debug.print("Error");
-
                                     return #err(errResponse);
                                 };
                                 case(_session) {
-                                                                                                    Debug.print("Succss");
-
                                     return #ok(_session);
                                 };
                             };
