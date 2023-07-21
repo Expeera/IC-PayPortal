@@ -132,7 +132,7 @@ export default function Form() {
         >
           <option value="default">Select payment method</option>
           <option value="stripe">Stripe</option>
-          {/* <option value="paypal">PayPal</option> */}
+          <option value="paypal">PayPal</option>
         </select>
         <input
           type="number"

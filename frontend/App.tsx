@@ -109,6 +109,10 @@ function App() {
             </Route>
             <Route path="stripe/success/:invoiceNo/:sessionId" element={<Success />} />
             <Route path="stripe/cancel/:invoiceNo/:sessionId" element={<Cancel />} />
+
+            <Route path="paypal/success/:invoiceNo" element={<Success />} />
+            <Route path="paypal/cancel/:invoiceNo" element={<Cancel />} />
+
             <Route path="/invoice" element={<Form />} />
             <Route path="/admin" element={<Admin />} />
             <Route
