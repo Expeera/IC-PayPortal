@@ -4,6 +4,7 @@ import { AppContext } from "../../App"
 import { toast } from "react-toastify"
 import "./table.css" // Import the CSS file
 import { Invoice } from "../../Hooks/UseAuthClient"
+import img from "../../assets/img-placeholder.webp"
 
 import { Row, Col } from "react-bootstrap"
 export interface Item {
@@ -34,45 +35,45 @@ export default function Form() {
   const [products, setProducts] = useState([
     {
       id: 1,
-      name: "Prodct 1",
+      name: "Product 1",
       price: (10 + Math.random() * 190).toFixed(2),
       quntity: 12,
-      image: "../../assets/img-placeholder.webp",
+      image: img,
     },
     {
       id: 2,
-      name: "Prodct 2",
+      name: "Product 2",
       price: (10 + Math.random() * 190).toFixed(2),
       quntity: 12,
-      image: "../../assets/img-placeholder.webp",
+      image: img
     },
     {
       id: 3,
-      name: "Prodct 3",
+      name: "v 3",
       price: (10 + Math.random() * 190).toFixed(2),
       quntity: 12,
-      image: "../../assets/img-placeholder.webp",
+      image: img
     },
     {
       id: 4,
-      name: "Prodct 4",
+      name: "v 4",
       price: (10 + Math.random() * 190).toFixed(2),
       quntity: 12,
-      image: "../../assets/img-placeholder.webp",
+      image: img
     },
     {
       id: 5,
-      name: "Prodct 5",
+      name: "Product 5",
       price: (10 + Math.random() * 190).toFixed(2),
       quntity: 12,
-      image: "../../assets/img-placeholder.webp",
+      image: img
     },
     {
       id: 6,
-      name: "Prodct 6",
+      name: "Product 6",
       price: (10 + Math.random() * 190).toFixed(2),
       quntity: 12,
-      image: "../../assets/img-placeholder.webp",
+      image: img
     },
   ])
 
