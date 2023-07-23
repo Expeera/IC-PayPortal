@@ -7,18 +7,17 @@ import { Invoice } from "../../Hooks/UseAuthClient"
 import Button from "react-bootstrap/Button"
 import Modal from "react-bootstrap/Modal"
 import { Row, Col } from "react-bootstrap"
+export interface Item {
+  id: number;
+  name: string;
+  price: number
+}
 
 export interface CreateInvoiceBody {
   amount: number
   paymentMethod: string
   currency: string
-  items: [
-    {
-      id: number
-      name: string
-      price: number
-    },
-  ]
+  items: Array<Item>
 }
 
 export default function Form() {
@@ -82,20 +81,46 @@ export default function Form() {
     },
   ])
 
-  const [cart, setCart] = useState([])
+  const [cart, setCart] = useState([]);
 
   const addToCart = (product) => {
     // Check if the product already exists in the cart
-    const existingProduct = cart.find((item) => item.id === product.id)
+    const existingProduct = cart.find((item) => item.id === product.id);
 
     if (existingProduct) {
       toast.error(`${product.name} is already in the cart.`)
     } else {
+      var carts = [...cart, { ...product }];
       // Product does not exist in the cart, add it with a quantity property set to 1
-      setCart([...cart, { ...product }])
+      setCart(carts);
       toast.success(`${product.name} added successfully.`)
+      
+      var data = formData;
+      data.amount = getTotalCartItems(carts).toFixed(2);
+      setFormData(data);
+
+      console.log(getTotalCartItems(carts));
     }
-  }
+  };
+
+
+  const getTotalCartItems = (carts) => {
+    return carts.reduce((total, item) => parseFloat(total) + parseFloat(item.price), 0);
+  };
+
+  const removeFromCart = (product) => {
+    const updatedCart = cart.filter((item) => item.id !== product.id);
+    setCart(updatedCart);
+
+    var data = formData;
+    data.amount = getTotalCartItems(updatedCart).toFixed(2);
+    setFormData(data);
+
+    toast.success(`${product.name} removed successfully.`)
+  };
+
+  const isProductInCart = (productId) => cart.some((item) => item.id === productId);
+
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -107,26 +132,38 @@ export default function Form() {
     if (name == "currency") {
       setCurrency(value)
     }
+
   }
 
   const handleSubmit = (e) => {
-    e.preventDefault()
+    e.preventDefault();
+
+    var amount = 0;
+    var carts = cart.map((item) => {
+      amount += parseFloat(item.price);
+      return {
+        id: parseInt(item.id),
+        name: item.name,
+        price: parseFloat(item.price)
+      }
+    });
+
+    console.log(carts);
 
     let data: CreateInvoiceBody = {
-      amount: parseFloat(formData.amount.toString()),
+      amount: amount,
       paymentMethod: formData.paymentMethod,
       currency: formData.currency,
-      items: carts,
+      items: carts
     }
 
-    actor
-      .create_invoice(data)
+    actor.create_invoice(data)
       .then((data) => {
         console.log({ data })
 
         if (data.status) {
           if ("success" in data.body) {
-            window.open(data.body.success.payment.redirectUrl, "_blank")
+            window.open(data.body.success.payment.redirectUrl, '_blank');
           }
           toast.success(data.message)
         } else {
@@ -137,6 +174,8 @@ export default function Form() {
         console.log({ err })
         toast.error(err.message)
       })
+
+   
   }
   const dummyData = [
     {
@@ -186,13 +225,15 @@ export default function Form() {
     },
   ]
 
-  const [invoices, setInvoices] = useState(dummyData)
+  const [invoices, setInvoices] = useState([]);
 
   useEffect(() => {
+
     async function myInvoice() {
-      var isOwnerVal = await isOwner()
+
+      var isOwnerVal = await isOwner();
       if (isOwnerVal) {
-        navigate("/admin")
+        navigate("/admin");
       }
 
       actor
@@ -204,9 +245,13 @@ export default function Form() {
         .catch((err) => {
           console.log(err)
         })
+      
+
     }
 
-    isAuthenticated && actor && myInvoice()
+
+    isAuthenticated && actor && myInvoice();
+
   }, [isAuthenticated, actor])
 
   const handleClickLogout = () => {
@@ -267,8 +312,28 @@ export default function Form() {
                       <p style={{ fontWeight: 600, fontSize: "14px" }}>
                         Quntity: {product.quntity}
                       </p>
-                      <button
-                        onClick={(e) => addToCart(product)}
+
+                      {!isProductInCart(product.id) ? (
+                        <>
+                          <button
+                            onClick={(e) => addToCart(product)}
+                            style={{
+                              padding: "8px 12px",
+                              backgroundColor: "#28a745",
+                              color: "#fff",
+                              border: "none",
+                              cursor: "pointer",
+                              background: "#28a745",
+                              borderRadius: "8px",
+                              fontSize: "14px",
+                            }}
+                          >
+                            Add To Cart
+                          </button>
+                        </>
+                      ) : (
+                          <button
+                        onClick={(e) => removeFromCart(product)}
                         style={{
                           padding: "8px 12px",
                           backgroundColor: "#28a745",
@@ -280,8 +345,10 @@ export default function Form() {
                           fontSize: "14px",
                         }}
                       >
-                        Add To Cart
+                        Remove from Cart
                       </button>
+                      )}
+                      
                     </div>
                   </Col>
                 ))}

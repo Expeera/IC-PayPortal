@@ -72,15 +72,25 @@ export default function Admin() {
 
   useEffect(() => {
     async function invoices() {
-      actor
-        .get_all_invoices_to_admin()
-        .then(async (data) => {
-          console.log("woened ", { data })
-          setInvoices(data)
+
+      actor.get_all_invoices_to_admin()
+        .then((data) => {
+          console.log("invoices", { data })
+
+          if (data.status) {
+            if ("success" in data.body) {
+              setInvoices(data.body.success)
+            }
+            toast.success(data.message)
+          } else {
+            toast.error(data.message)
+          }
         })
         .catch((err) => {
-          console.log(err)
+          console.log("invoices err", { err })
+          toast.error(err.message)
         })
+
     }
 
     isAuthenticated && actor && invoices()
