@@ -15,58 +15,32 @@ export default function MyInvoices() {
   const handleShow = () => setShow(true)
   const navigate = useNavigate()
 
-  const dummyData = [
-    {
-      id: "1",
-      owner: "John Doe",
-      amount: 100,
-      currency: "USD",
-      paymentMethod: "Credit Card",
-      status: "Paid",
-      createdAt: Date.now() - 86400000, // 1 day ago
-    },
-    {
-      id: "2",
-      owner: "Jane Smith",
-      amount: 50,
-      currency: "EUR",
-      paymentMethod: "PayPal",
-      status: "Pending",
-      createdAt: Date.now() - 172800000, // 2 days ago
-    },
-    {
-      id: "3",
-      owner: "Michael Johnson",
-      amount: 200,
-      currency: "GBP",
-      paymentMethod: "Bank Transfer",
-      status: "Paid",
-      createdAt: Date.now() - 259200000, // 3 days ago
-    },
-    {
-      id: "4",
-      owner: "Emily Brown",
-      amount: 75,
-      currency: "CAD",
-      paymentMethod: "Credit Card",
-      status: "Paid",
-      createdAt: Date.now() - 345600000, // 4 days ago
-    },
-    {
-      id: "5",
-      owner: "William Lee",
-      amount: 120,
-      currency: "AUD",
-      paymentMethod: "PayPal",
-      status: "Pending",
-      createdAt: Date.now() - 432000000, // 5 days ago
-    },
-  ]
-
-  const [invoices, setInvoices] = useState(dummyData)
+  const [invoices, setInvoices] = useState([])
   if (!isAuthenticated) {
     navigate("/auth/login")
   }
+
+  useEffect(() => {
+    async function myInvoice() {
+      var isOwnerVal = await isOwner()
+      if (isOwnerVal) {
+        navigate("/admin")
+      }
+
+      actor
+        .get_my_invoices()
+        .then(async (data) => {
+          console.log("woened ", { data })
+          setInvoices(data)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    }
+
+    isAuthenticated && actor && myInvoice()
+  }, [isAuthenticated, actor])
+
   return (
     <>
       <Header />
@@ -114,7 +88,10 @@ export default function MyInvoices() {
                     style={{ flexDirection: "column" }}
                   >
                     {item.status == "Pending" ? (
-                      <a href={item.paymentLink} target="_blank">
+                      <a
+                        className="d-flex justify-content-center align-items-center gap-1"
+                        style={{ flexDirection: "column" }}
+                        href={item.paymentLink} target="_blank">
                         Go To Pay
                       </a>
                     ) : (

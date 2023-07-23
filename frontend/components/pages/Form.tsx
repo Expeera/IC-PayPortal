@@ -216,6 +216,7 @@ export default function Form() {
       return {
         id: parseInt(item.id),
         name: item.name,
+        quantity: item.quantity,
         price: parseFloat(item.price),
       }
     })
@@ -255,16 +256,6 @@ export default function Form() {
       if (isOwnerVal) {
         navigate("/admin")
       }
-
-      actor
-        .get_my_invoices()
-        .then(async (data) => {
-          console.log("woened ", { data })
-          setInvoices(data)
-        })
-        .catch((err) => {
-          console.log(err)
-        })
     }
 
     isAuthenticated && actor && myInvoice()

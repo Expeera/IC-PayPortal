@@ -65,7 +65,7 @@ export function useAuthClient(props?: UseAuthClientProps) {
       onSuccess: async () => {
         if (!isAuthenticated) {
           console.log("here2")
-          cb("/invoice")
+          cb("/checkout")
           toast.info("Login successful")
           setIsAuthenticated(true)
           setTimeout(() => {

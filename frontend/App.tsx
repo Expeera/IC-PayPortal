@@ -121,8 +121,8 @@ function App() {
             <Route path="paypal/success/:invoiceNo" element={<Success />} />
             <Route path="paypal/cancel/:invoiceNo" element={<Cancel />} />
 
-            <Route path="/invoice" element={<Form />} />
-            <Route path="/myinvoices" element={<MyInvoices />} />
+            <Route path="/checkout" element={<Form />} />
+            <Route path="/my-invoices" element={<MyInvoices />} />
             <Route path="/admin" element={<Admin />} />
             <Route
               path="/"
