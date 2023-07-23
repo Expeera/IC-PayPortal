@@ -107,7 +107,10 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route path="/auth" element={<DefaultLayout />}>
-              <Route path="login" element={<Login />}></Route>
+              <Route
+                path="login"
+                element={!isAuthenticated ? <Login /> : <DefaultLayout />}
+              ></Route>
             </Route>
             <Route
               path="stripe/success/:invoiceNo/:sessionId"

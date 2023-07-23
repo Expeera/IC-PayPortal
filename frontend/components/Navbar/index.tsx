@@ -1,9 +1,18 @@
-import React from "react"
+import React, { useContext } from "react"
 import Container from "react-bootstrap/Container"
 import Nav from "react-bootstrap/Nav"
 import Navbar from "react-bootstrap/Navbar"
+import { AppContext } from "../../App"
+import { useNavigate } from "react-router-dom"
 
 export default function Header() {
+  const { logout } = useContext(AppContext)
+  const navigate = useNavigate()
+
+  const handleClickLogout = () => {
+    logout()
+    navigate("/auth/login")
+  }
   return (
     <div>
       <Navbar expand="lg" className="bg-body-tertiary">
@@ -15,6 +24,20 @@ export default function Header() {
               <Nav.Link href="/checkout">Checkout</Nav.Link>
               <Nav.Link href="/my-invoices">My Invoices</Nav.Link>
             </Nav>
+            <button
+              onClick={handleClickLogout}
+              style={{
+                padding: "10px 12px",
+                backgroundColor: "#dc3545",
+                color: "#fff",
+                border: "none",
+                cursor: "pointer",
+                borderRadius: "8px",
+                fontSize: "16px",
+              }}
+            >
+              Logout
+            </button>
           </Navbar.Collapse>
         </Container>
       </Navbar>

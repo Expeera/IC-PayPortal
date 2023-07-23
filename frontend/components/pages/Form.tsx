@@ -267,7 +267,7 @@ export default function Form() {
   }
 
   if (!isAuthenticated) {
-    navigate("/auth/login")
+    // navigate("/auth/login")
   }
 
   useEffect(() => {
@@ -488,20 +488,6 @@ export default function Form() {
                   Submit
                 </button>
               </form>
-              <button
-                onClick={handleClickLogout}
-                style={{
-                  padding: "15px 20px",
-                  backgroundColor: "#dc3545",
-                  color: "#fff",
-                  border: "none",
-                  cursor: "pointer",
-                  borderRadius: "8px",
-                  fontSize: "18px",
-                }}
-              >
-                Logout
-              </button>
             </div>
           </Col>
         </Row>

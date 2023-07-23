@@ -12,12 +12,62 @@ export default function MyInvoices() {
   const [show, setShow] = useState(false)
 
   const handleClose = () => setShow(false)
-  const handleShow = () => setShow(true)
+  const handleShow = (invoice) => {
+    setSelectedInvoice(invoice)
+    setShow(true)
+  }
+  const [selectedInvoice, setSelectedInvoice] = useState(null)
   const navigate = useNavigate()
-
-  const [invoices, setInvoices] = useState([])
+  const dummyData = [
+    {
+      id: "1",
+      owner: "John Doe",
+      amount: 100,
+      currency: "USD",
+      paymentMethod: "Credit Card",
+      status: "Paid",
+      createdAt: Date.now() - 86400000, // 1 day ago
+    },
+    {
+      id: "2",
+      owner: "Jane Smith",
+      amount: 50,
+      currency: "EUR",
+      paymentMethod: "PayPal",
+      status: "Pending",
+      createdAt: Date.now() - 172800000, // 2 days ago
+    },
+    {
+      id: "3",
+      owner: "Michael Johnson",
+      amount: 200,
+      currency: "GBP",
+      paymentMethod: "Bank Transfer",
+      status: "Paid",
+      createdAt: Date.now() - 259200000, // 3 days ago
+    },
+    {
+      id: "4",
+      owner: "Emily Brown",
+      amount: 75,
+      currency: "CAD",
+      paymentMethod: "Credit Card",
+      status: "Paid",
+      createdAt: Date.now() - 345600000, // 4 days ago
+    },
+    {
+      id: "5",
+      owner: "William Lee",
+      amount: 120,
+      currency: "AUD",
+      paymentMethod: "PayPal",
+      status: "Pending",
+      createdAt: Date.now() - 432000000, // 5 days ago
+    },
+  ]
+  const [invoices, setInvoices] = useState(dummyData)
   if (!isAuthenticated) {
-    navigate("/auth/login")
+    // navigate("/auth/login")
   }
 
   useEffect(() => {
@@ -90,14 +140,19 @@ export default function MyInvoices() {
                     {item.status == "Pending" ? (
                       <a
                         className="btn btn-warning"
-                        href={item.paymentLink} target="_blank">
+                        href={item.paymentLink}
+                        target="_blank"
+                      >
                         Go To Pay
                       </a>
                     ) : (
                       ""
                     )}
                     <>
-                      <Button variant="primary" onClick={handleShow}>
+                      <Button
+                        variant="primary"
+                        onClick={() => handleShow(item)}
+                      >
                         View
                       </Button>
 
@@ -107,18 +162,29 @@ export default function MyInvoices() {
                         style={{ width: "100%" }}
                       >
                         <Modal.Header closeButton>
-                          <Modal.Title>Invoice NO: {item.id}</Modal.Title>
+                          <Modal.Title>
+                            Invoice NO: {selectedInvoice?.id}
+                          </Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
-                          <p>Amount: {item.amount}</p>
-                          <p>Currency: {item.currency}</p>
-                          <p>PaymentMethod: {item.paymentMethod}</p>
-                          <p>Status: {item.status}</p>
-                          <div className="table-container">
+                          <div className="d-flex gap-2 justify-content-around">
+                            <p>
+                              Total Amount: {selectedInvoice?.amount}{" "}
+                              {selectedInvoice?.currency}
+                            </p>
+                            <p>
+                              PaymentMethod: {selectedInvoice?.paymentMethod}
+                            </p>
+                            <p>Status: {selectedInvoice?.status}</p>
+                          </div>
+                          <div
+                            className="table-container"
+                            style={{ width: "100%" }}
+                          >
                             <h3>Table Title</h3>
                             <table
                               className="styled-table"
-                              style={{ overflowY: "scroll" }}
+                              style={{ overflowY: "scroll", width: "100%" }}
                             >
                               <thead>
                                 <tr>
