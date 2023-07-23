@@ -27,7 +27,7 @@ import Success from "./components/pages/Success"
 import Admin from "./components/pages/Admin"
 import Cancel from "./components/pages/Cancel"
 import "bootstrap/dist/css/bootstrap.min.css"
-import MyInvoices from "./components/pages/myInvoices"
+import MyInvoices from "./components/pages/MyInvoices"
 
 interface AppStateInterface {
   authClient?: AuthClient
