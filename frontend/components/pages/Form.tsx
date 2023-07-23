@@ -97,7 +97,6 @@ export default function Form() {
         ).toFixed(2),
       }))
     } else {
-      var carts = [...cart, { ...product }]
       // Product does not exist in the cart, add it with a quantity property set to 1
       const newProduct = {
         ...product,
@@ -274,7 +273,7 @@ export default function Form() {
   }
 
   if (!isAuthenticated) {
-    navigate("/auth/login")
+    // navigate("/auth/login")
   }
 
   useEffect(() => {
