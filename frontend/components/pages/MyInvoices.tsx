@@ -85,12 +85,11 @@ export default function MyInvoices() {
                   </td>
                   <td
                     className="d-flex justify-content-center align-items-center gap-1"
-                    style={{ flexDirection: "column" }}
+                    style={{ flexDirection: "row" }}
                   >
                     {item.status == "Pending" ? (
                       <a
-                        className="d-flex justify-content-center align-items-center gap-1"
-                        style={{ flexDirection: "column" }}
+                        className="btn btn-warning"
                         href={item.paymentLink} target="_blank">
                         Go To Pay
                       </a>
@@ -152,9 +151,6 @@ export default function MyInvoices() {
                         <Modal.Footer>
                           <Button variant="secondary" onClick={handleClose}>
                             Close
-                          </Button>
-                          <Button variant="primary" onClick={handleClose}>
-                            Save Changes
                           </Button>
                         </Modal.Footer>
                       </Modal>
