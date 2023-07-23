@@ -7,6 +7,8 @@ import { Invoice } from "../../Hooks/UseAuthClient"
 import img from "../../assets/img-placeholder.webp"
 
 import { Row, Col } from "react-bootstrap"
+import Navbar from "../Navbar"
+import Header from "../Navbar"
 export interface Item {
   id: number
   name: string
@@ -209,7 +211,7 @@ export default function Form() {
     e.preventDefault()
 
     var amount = 0
-    var carts = cart.map((item) => {
+    var carts = cart.products.map((item) => {
       amount += parseFloat(item.price)
       return {
         id: parseInt(item.id),
@@ -274,7 +276,7 @@ export default function Form() {
   }
 
   if (!isAuthenticated) {
-    // navigate("/auth/login")
+    navigate("/auth/login")
   }
 
   useEffect(() => {
@@ -283,6 +285,7 @@ export default function Form() {
 
   return (
     <>
+      <Header />
       <div
         style={{
           display: "flex",
