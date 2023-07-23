@@ -4,6 +4,7 @@ import { AppContext } from "../../App"
 import { toast } from "react-toastify"
 import "./table.css" // Import the CSS file
 import { Invoice } from "../../Hooks/UseAuthClient"
+import img from "../../assets/img-placeholder.webp"
 
 import { Row, Col } from "react-bootstrap"
 export interface Item {
@@ -37,42 +38,42 @@ export default function Form() {
       name: "Prodct 1",
       price: (10 + Math.random() * 190).toFixed(2),
       quntity: 12,
-      image: "../../assets/img-placeholder.webp",
+      image: img,
     },
     {
       id: 2,
       name: "Prodct 2",
       price: (10 + Math.random() * 190).toFixed(2),
       quntity: 12,
-      image: "../../assets/img-placeholder.webp",
+      image: img,
     },
     {
       id: 3,
       name: "Prodct 3",
       price: (10 + Math.random() * 190).toFixed(2),
       quntity: 12,
-      image: "../../assets/img-placeholder.webp",
+      image: img,
     },
     {
       id: 4,
       name: "Prodct 4",
       price: (10 + Math.random() * 190).toFixed(2),
       quntity: 12,
-      image: "../../assets/img-placeholder.webp",
+      image: img,
     },
     {
       id: 5,
       name: "Prodct 5",
       price: (10 + Math.random() * 190).toFixed(2),
       quntity: 12,
-      image: "../../assets/img-placeholder.webp",
+      image: img,
     },
     {
       id: 6,
       name: "Prodct 6",
       price: (10 + Math.random() * 190).toFixed(2),
       quntity: 12,
-      image: "../../assets/img-placeholder.webp",
+      image: img,
     },
   ])
 
@@ -145,7 +146,7 @@ export default function Form() {
     const existingProduct = updatedCart.products.find(
       (item) => item.id === productId,
     )
-    if (existingProduct && existingProduct.quantity > 1) {
+    if (existingProduct && existingProduct.quantity > 0) {
       existingProduct.quantity--
       existingProduct.totalPrice = (
         existingProduct.price * existingProduct.quantity
@@ -448,7 +449,7 @@ export default function Form() {
                 <input
                   type="number"
                   name="amount"
-                  value={formData.amount}
+                  value={cart.totalPrice}
                   onChange={handleChange}
                   placeholder="Amount"
                   disabled
