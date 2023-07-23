@@ -6,18 +6,17 @@ import "./table.css" // Import the CSS file
 import { Invoice } from "../../Hooks/UseAuthClient"
 
 import { Row, Col } from "react-bootstrap"
+export interface Item {
+  id: number
+  name: string
+  price: number
+}
 
 export interface CreateInvoiceBody {
   amount: number
   paymentMethod: string
   currency: string
-  items: [
-    {
-      id: number
-      name: string
-      price: number
-    },
-  ]
+  items: Array<Item>
 }
 
 export default function Form() {
@@ -98,6 +97,7 @@ export default function Form() {
         ).toFixed(2),
       }))
     } else {
+      var carts = [...cart, { ...product }]
       // Product does not exist in the cart, add it with a quantity property set to 1
       const newProduct = {
         ...product,
@@ -208,8 +208,20 @@ export default function Form() {
   const handleSubmit = (e) => {
     e.preventDefault()
 
+    var amount = 0
+    var carts = cart.map((item) => {
+      amount += parseFloat(item.price)
+      return {
+        id: parseInt(item.id),
+        name: item.name,
+        price: parseFloat(item.price),
+      }
+    })
+
+    console.log(carts)
+
     let data: CreateInvoiceBody = {
-      amount: parseFloat(formData.amount.toString()),
+      amount: amount,
       paymentMethod: formData.paymentMethod,
       currency: formData.currency,
       items: carts,
