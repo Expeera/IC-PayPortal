@@ -39,7 +39,12 @@ export interface Invoice {
   'amount' : number,
   'transactionId' : string,
 }
-export interface Item { 'id' : bigint, 'name' : string, 'price' : number }
+export interface Item {
+  'id' : bigint,
+  'name' : string,
+  'quantity' : bigint,
+  'price' : number,
+}
 export interface Response {
   'status' : boolean,
   'body' : ResponseStatus,

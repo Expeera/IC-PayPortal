@@ -20,6 +20,7 @@ module {
     public type Item = {
         id: Nat;
         name: Text;
+        quantity: Int;
         price: Float;
     };
     
@@ -28,6 +29,7 @@ module {
         public let Completed            : Text = "Completed";
         public let Cancelled            : Text = "Cancelled";
         public let CancelledByAdmin     : Text = "Cancelled by admin";
+        public let CancelledBySystem     : Text = "Cancelled by system";
     };
 
     public type CreateSession = {

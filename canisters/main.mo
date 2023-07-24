@@ -35,6 +35,9 @@ actor Fiat {
     // Trie to store owner's invoices
     private stable var ownerInvoicesTrie : Trie.Trie<Principal, List.List<Nat>> = Trie.empty();
 
+    // List to store pending invoices
+    private stable var pendingInvoiceList: List.List<Nat> = List.nil<Nat>();
+
     // Owner's identifier
     private var owner:Text = "ce3oe-5x3qd-tjgui-rteiu-qmodi-auwyb-ktn4d-t2yaw-6s56p-tbwuw-3ae";
 
@@ -63,7 +66,7 @@ actor Fiat {
         return Array.foldLeft<Types.Item, Float>(
             items,
             0, // start the sum at 0
-            func(sumSoFar, x) = sumSoFar + x.price // this entire function can be replaced with `add`!
+            func(sumSoFar, x) = sumSoFar + Float.mul(x.price , Float.fromInt(x.quantity)) // this entire function can be replaced with `add`!
         );
     };
 
@@ -238,6 +241,9 @@ actor Fiat {
         // Add the new invoice number to the owner's list of invoices
         ownerInvoicesList := List.push(noInvoice, ownerInvoicesList);
 
+        // Add the new invoice number to the pending's list of invoices
+        pendingInvoiceList := List.push(noInvoice, pendingInvoiceList);
+
         // Update the owner's invoices in the trie (assuming 'ownerInvoicesTrie' is a global variable)
         ownerInvoicesTrie := Trie.replace(
             ownerInvoicesTrie,
@@ -301,12 +307,9 @@ actor Fiat {
                 return Utils.generalResponse(false, Messages.invoice_not_found, #err({}), Http.Status.InternalServerError);
             };
             case (?invoiceFind) {
-                // Check if the caller is the owner of the invoice
-                if(not(Text.equal(Principal.toText(caller), Principal.toText(invoiceFind.owner)))) {
-                    return Utils.generalResponse(false, Messages.invoice_not_found, #err({}), Http.Status.UnprocessableEntity);
-                }
+                
                 // Check if the payment method matches the invoice
-                else if(not(Validation.isEqual(invoiceFind.paymentMethod, invoiceReq.paymentMethod))) {
+                if(not(Validation.isEqual(invoiceFind.paymentMethod, invoiceReq.paymentMethod))) {
                     return Utils.generalResponse(false, Messages.invoice_not_found, #err({}), Http.Status.UnprocessableEntity);
                 }
                 // Check if the invoice is in the pending status
@@ -337,6 +340,8 @@ actor Fiat {
                     Nat.equal, 
                     ?newInvoice,
                 ).0;
+
+                pendingInvoiceList := List.filter(pendingInvoiceList, func(_invoiceNo : Nat) : Bool = _invoiceNo != invoiceFind.id);
 
                 // Return an HTTP response indicating the success of the status update and providing relevant information.
                 return Utils.generalResponse(true, 
@@ -561,6 +566,8 @@ actor Fiat {
             ?newInvoice,
         ).0;
 
+        pendingInvoiceList := List.filter(pendingInvoiceList, func(_invoiceNo : Nat) : Bool = _invoiceNo != invoiceFind.id);
+
         // Return an HTTP response indicating the success of the status update and providing relevant information.
         return Utils.generalResponse(true, 
             // Use a 'switch' statement to determine the success message based on the invoice request status.
@@ -583,5 +590,80 @@ actor Fiat {
         // Convert the actor ID to text
         Principal.toText(Principal.fromActor(Fiat));
     };
+
+    ////////////////////// Cron Job /////////////////////////////////
+    // This private function is responsible for checking pending invoices.
+    private func check_pending_invoices(): async () {
+        // Iterate through each invoice number in the 'pendingInvoiceList'.
+        List.iterate<Nat>(pendingInvoiceList, func(invoiceNo: Nat): () {
+            // Find the invoice details associated with the current invoice number in the 'invoicesTrie'.
+            switch (Trie.find(invoicesTrie, Utils.keyNat(invoiceNo), Nat.equal)) {
+                case (null) {
+                    // If no invoice details are found for the given invoice number, do nothing.
+                    // This means the invoice is not present in the 'invoicesTrie'.
+                    // This case shouldn't happen, but it's handled gracefully by doing nothing.
+                };
+                case (?invoiceFind) {
+                    // If invoice details are found (of type 'invoiceFind') for the given invoice number:
+
+                    // Check if the invoice status is "Pending" and if it has exceeded the 10-minute threshold.
+                    if (Validation.isEqual(invoiceFind.status, Types.InvoiceStatus.Pending) and 
+                        (invoiceFind.createdAt + (24 * 60 * 60 * (10 ** 9))) <= Time.now()) {
+                        
+                        // If the conditions are met, create a new invoice with updated status "CancelledBySystem".
+                        let newInvoice = {
+                            id = invoiceFind.id;
+                            owner = invoiceFind.owner;
+                            amount = invoiceFind.amount;
+                            status = Types.InvoiceStatus.CancelledBySystem;
+                            items = invoiceFind.items;
+                            transactionId = invoiceFind.transactionId;
+                            paymentLink = invoiceFind.paymentLink;
+                            paymentMethod = invoiceFind.paymentMethod;
+                            currency = invoiceFind.currency;
+                            createdAt = invoiceFind.createdAt;
+                        };
+
+                        // Replace the old invoice with the new invoice in the 'invoicesTrie' using 'Trie.replace'.
+                        invoicesTrie := Trie.replace(
+                            invoicesTrie,
+                            Utils.keyNat(invoiceFind.id),
+                            Nat.equal, 
+                            ?newInvoice,
+                        ).0;
+
+                        // Print a debug message indicating the removal of the invoice.
+                        Debug.print("removed! " # Nat.toText(invoiceFind.id));
+
+                        // Remove the current invoice number from the 'pendingInvoiceList' using 'List.filter'.
+                        pendingInvoiceList := List.filter(pendingInvoiceList, func(_invoiceNo: Nat): Bool = _invoiceNo != invoiceFind.id);
+                    };
+                };
+            };
+        });
+    };
+
+    // Declare a mutable variable 'count' of type 'Nat' and initialize it with 0.
+    private var count: Nat = 0;
+
+    // Define the system function 'heartbeat'.
+    system func heartbeat(): async () {
+        // Check if 'count' has reached 600 (approximately 5 minute).
+        if (count > 600) {
+            // If 'count' is greater than 600, reset 'count' to 0.
+            count := 0;
+
+            // Call the 'check_pending_invoices()' function to process pending invoices.
+            // This function is executed once every 600 iterations of the 'heartbeat' function (approximately 5 minute).
+            await check_pending_invoices();
+        };
+
+        // Increment the value of 'count' by 1.
+        count += 1;
+
+        // Print a debug message to show the current value of 'count'.
+        Debug.print("no! " # Nat.toText(count));
+    };
+
     
 }

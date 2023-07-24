@@ -52,6 +52,7 @@ type Item =
    id: nat;
    name: text;
    price: float64;
+   quantity: int;
  };
 type Invoice = 
  record {

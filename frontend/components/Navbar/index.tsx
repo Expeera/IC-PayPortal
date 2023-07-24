@@ -5,7 +5,7 @@ import Navbar from "react-bootstrap/Navbar"
 import { AppContext } from "../../App"
 import { useNavigate } from "react-router-dom"
 
-export default function Header() {
+export default function Header({ isAdmin=false }) {
   const { logout } = useContext(AppContext)
   const navigate = useNavigate()
 
@@ -20,10 +20,16 @@ export default function Header() {
           <Navbar.Brand href="">Fiat</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="me-auto">
-              <Nav.Link href="/checkout">Checkout</Nav.Link>
-              <Nav.Link href="/my-invoices">My Invoices</Nav.Link>
-            </Nav>
+            
+            
+            {isAdmin ? 
+              <Nav className="me-auto">
+              </Nav> : 
+              <Nav className="me-auto">
+                <Nav.Link href="/checkout">Checkout</Nav.Link>
+                <Nav.Link href="/my-invoices">My Invoices</Nav.Link>
+              </Nav>
+            }
             <button
               onClick={handleClickLogout}
               style={{

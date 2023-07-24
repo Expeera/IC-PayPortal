@@ -39,6 +39,7 @@ export const idlFactory = ({ IDL }) => {
   const Item = IDL.Record({
     'id' : IDL.Nat,
     'name' : IDL.Text,
+    'quantity' : IDL.Int,
     'price' : IDL.Float64,
   });
   const CreateInvoiceBody = IDL.Record({

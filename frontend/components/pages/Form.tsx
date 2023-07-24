@@ -4,7 +4,13 @@ import { AppContext } from "../../App"
 import { toast } from "react-toastify"
 import "./table.css" // Import the CSS file
 import { Invoice } from "../../Hooks/UseAuthClient"
-import img from "../../assets/img-placeholder.webp"
+
+import product1 from "../../assets/product1.jpg"
+import product2 from "../../assets/product2.jpg"
+import product3 from "../../assets/product3.jpg"
+import product4 from "../../assets/product4.jpg"
+import product5 from "../../assets/product5.jpg"
+import product6 from "../../assets/product6.jpg"
 
 import { Row, Col } from "react-bootstrap"
 import Navbar from "../Navbar"
@@ -12,6 +18,7 @@ import Header from "../Navbar"
 export interface Item {
   id: number
   name: string
+  quantity: number
   price: number
 }
 
@@ -39,43 +46,37 @@ export default function Form() {
       id: 1,
       name: "Product 1",
       price: (10 + Math.random() * 190).toFixed(2),
-      quntity: 12,
-      image: img,
+      image: product1,
     },
     {
       id: 2,
       name: "Product 2",
       price: (10 + Math.random() * 190).toFixed(2),
-      quntity: 12,
-      image: img,
+      image: product2,
     },
     {
       id: 3,
-      name: "v 3",
+      name: "Product 3",
       price: (10 + Math.random() * 190).toFixed(2),
-      quntity: 12,
-      image: img,
+      image: product3,
     },
     {
       id: 4,
-      name: "v 4",
+      name: "Product 4",
       price: (10 + Math.random() * 190).toFixed(2),
-      quntity: 12,
-      image: img,
+      image: product4,
     },
     {
       id: 5,
       name: "Product 5",
       price: (10 + Math.random() * 190).toFixed(2),
-      quntity: 12,
-      image: img,
+      image: product5,
     },
     {
       id: 6,
       name: "Product 6",
       price: (10 + Math.random() * 190).toFixed(2),
-      quntity: 12,
-      image: img,
+      image: product6,
     },
   ])
 
@@ -212,7 +213,7 @@ export default function Form() {
 
     var amount = 0
     var carts = cart.products.map((item) => {
-      amount += parseFloat(item.price)
+      amount += (parseFloat(item.price) * item.quantity)
       return {
         id: parseInt(item.id),
         name: item.name,
@@ -229,6 +230,7 @@ export default function Form() {
       currency: formData.currency,
       items: carts,
     }
+    console.log(data)
 
     actor
       .create_invoice(data)
@@ -276,7 +278,7 @@ export default function Form() {
 
   return (
     <>
-      <Header />
+      <Header isAdmin={false} />
       <div
         style={{
           display: "flex",
@@ -308,7 +310,9 @@ export default function Form() {
                           "rgba(17, 17, 26, 0.05) 0px 1px 0px, rgba(17, 17, 26, 0.1) 0px 0px 8px",
                       }}
                     >
-                      <img src={product.image} style={{ width: "100%" }} />
+                      <img src={product.image} style={{
+                        // width: "100%"
+                      }} />
                       <h2
                         style={{
                           marginTop: "5px",
@@ -414,7 +418,7 @@ export default function Form() {
                 width: "100%",
               }}
             >
-              <h2>Create New Invoice</h2>
+              <h2>Checkout</h2>
               <form
                 style={{
                   display: "flex",

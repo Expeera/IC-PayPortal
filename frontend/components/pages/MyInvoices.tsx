@@ -65,7 +65,7 @@ export default function MyInvoices() {
       createdAt: Date.now() - 432000000, // 5 days ago
     },
   ]
-  const [invoices, setInvoices] = useState(dummyData)
+  const [invoices, setInvoices] = useState([])
   if (!isAuthenticated) {
     // navigate("/auth/login")
   }
@@ -188,28 +188,27 @@ export default function MyInvoices() {
                             >
                               <thead>
                                 <tr>
-                                  <th>1</th>
-                                  <th>2</th>
-                                  <th>3</th>
-                                  <th>4</th>
-                                  <th>5</th>
+                                  <th>Product ID</th>
+                                  <th>Product Name</th>
+                                  <th>Quntity</th>
+                                  <th>Price</th>
+                                  <th>Total</th>
                                 </tr>
                               </thead>
                               <tbody>
-                                <tr>
-                                  <td>1</td>
-                                  <td>2</td>
-                                  <td>3</td>
-                                  <td>4</td>
-                                  <td>5</td>
-                                </tr>
-                                <tr>
-                                  <td>1</td>
-                                  <td>2</td>
-                                  <td>3</td>
-                                  <td>4</td>
-                                  <td>5</td>
-                                </tr>
+                                {
+                                  selectedInvoice?.items.map((item) => (
+                                    <tr>
+                                      <td>{parseInt(item.id)}</td>
+                                      <td>{item.name}</td>
+                                      <td>{parseInt(item.quantity)}</td>
+                                      <td>{parseFloat(item.price)}</td>
+                                      <td>{parseFloat(item.price) * parseInt(item.quantity)} {selectedInvoice?.currency}</td>
+                                    </tr>
+                                  ))
+                                }
+                                
+                                
                               </tbody>
                             </table>
                           </div>
