@@ -28,7 +28,7 @@ module {
     public let created_invoice_successfully:Text = "Invoice created successfully";
     public let created_invoice_failed:Text = "Invoice creation failed";
 
-    public let confirmed_invoice_successfully:Text = "Invoice confirmed successfully";
+    public let confirmed_invoice_successfully:Text = "Invoice completed successfully";
     public let cancelled_invoice_successfully:Text = "Invoice cancelled successfully";
     public let confirmed_invoice_failed:Text = "Invoice confirmed failed";    
 

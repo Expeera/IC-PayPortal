@@ -606,7 +606,7 @@ actor Fiat {
                 case (?invoiceFind) {
                     // If invoice details are found (of type 'invoiceFind') for the given invoice number:
 
-                    // Check if the invoice status is "Pending" and if it has exceeded the 10-minute threshold.
+                    // Check if the invoice status is "Pending" and if it has exceeded the 24-hours threshold.
                     if (Validation.isEqual(invoiceFind.status, Types.InvoiceStatus.Pending) and 
                         (invoiceFind.createdAt + (24 * 60 * 60 * (10 ** 9))) <= Time.now()) {
                         
@@ -632,11 +632,11 @@ actor Fiat {
                             ?newInvoice,
                         ).0;
 
-                        // Print a debug message indicating the removal of the invoice.
-                        Debug.print("removed! " # Nat.toText(invoiceFind.id));
-
                         // Remove the current invoice number from the 'pendingInvoiceList' using 'List.filter'.
                         pendingInvoiceList := List.filter(pendingInvoiceList, func(_invoiceNo: Nat): Bool = _invoiceNo != invoiceFind.id);
+
+                        // Print a debug message indicating the removal of the invoice.
+                        Debug.print("removed! " # Nat.toText(invoiceFind.id));
                     };
                 };
             };
@@ -665,5 +665,4 @@ actor Fiat {
         Debug.print("no! " # Nat.toText(count));
     };
 
-    
 }

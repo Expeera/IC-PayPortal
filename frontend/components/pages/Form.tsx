@@ -311,7 +311,10 @@ export default function Form() {
                       }}
                     >
                       <img src={product.image} style={{
-                        // width: "100%"
+                        width: "100%",
+                        height: "204px",
+                        objectFit: "contain",
+                        padding: "20px 10px",
                       }} />
                       <h2
                         style={{
