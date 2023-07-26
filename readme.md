@@ -1,6 +1,6 @@
-# Fiat Payment Module for Motoko
+# 🚧 Fiat Payment Module for Motoko
 
-The Fiat Payment Module for Motoko is a library that provides developers with a set of functions for managing fiat payments on the Internet Computer Protocol (ICP). This module enables seamless integration of popular fiat payment gateways such as Stripe, Paypal, Open Bank, and more into Motoko applications.
+The Fiat Payment Module for Motoko is a library that provides developers with a set of functions for managing fiat payments on the Internet Computer Protocol (ICP). This module enables seamless integration of popular fiat payment gateways such as `Stripe` and `Paypal` into Motoko applications.
 
 [Live Demo](https://3356i-cqaaa-aaaao-axdqa-cai.icp0.io/)
 
@@ -38,8 +38,15 @@ The Fiat Payment Module offers the following features:
 - ### Get All Invoices to Admin:
     The `get_all_invoices_to_admin` function allows the admin user to retrieve all invoices stored in the system. By returning an array of invoices, it provides the admin with easy access to the complete list of invoices. This function is designed to assist administrators in efficiently managing and reviewing invoices for administrative purposes. It enables them to retrieve and view all invoices in a straightforward manner, streamlining their workflow and facilitating effective invoice management.
 
+- ### Change Invoice Status to Admin:
+    The `change_invoice_status_to_admin` function enables the owner or administrator to modify the status of an invoice under certain conditions. This function is useful for updating the status of invoices based on administrative actions or special circumstances. The function ensures that the caller is authorized to make changes and validates the payment method provided in the request. If the conditions are met, the function updates the invoice status in the system, allowing administrators to efficiently manage and track the status of invoices.
+
+
 - ### Is Owner: 
     The `isOwner` function checks if the caller is the owner of a resource. It compares the caller's identity with the owner's identity and returns a Boolean indicating the result. It is used for ownership verification in access control and authorization scenarios.
+
+- ### Background Processing of Pending Invoices:
+    The invoicing system employs a background processing mechanism to efficiently manage pending invoices. The `check_pending_invoices` function, complemented by the `heartbeat` system function, plays a pivotal role in automatically processing invoices that have been in the "Pending" status for an extended period. By periodically checking pending invoices and updating their status to "Cancelled By System" when the 24-hour threshold is exceeded, the system ensures efficient self-regulation. The `heartbeat` function schedules regular checks, maintaining data accuracy and enhancing overall efficiency. Together, these components provide seamless invoice management for administrators and users, safeguarding the integrity of the invoicing system.
 
 ## Requirements
 
@@ -52,7 +59,7 @@ The Fiat Payment Module offers the following features:
 
 ## Development
 
-### Getting Started
+### ⌛ Installation
 
 1. Clone the git repository.
 
@@ -60,12 +67,14 @@ The Fiat Payment Module offers the following features:
 
 3. Run `dfx start --clean`
 
-4. To deploy on a local network run `dfx deploy --network local`, To deploy on the Internet Computer network run `dfx deploy --nerwork ic`
+4. Configure the `fiat` canister's owner before deployment, and update Stripe's `secret_key` and PayPal's `client_id` and `client_secret` in the `service.mo` file. Follow best security practices to store sensitive information securely.
 
-5. After deploying the assets canister ID, open `config.mo` file and replace the `frontend Canister Id` with the new canister ID and deploy again.
+5. To deploy on a local network run `dfx deploy --network local`, To deploy on the Internet Computer network run `dfx deploy --nerwork ic`
 
-6. To generate Typescript type `npm run generate:types`
+6. After deploying the assets canister ID, open `config.mo` file and replace the `frontend Canister Id` with the new assets canister ID and redeploy.
 
-7. Run `npm run dev`
+7. To generate Typescript type `npm run generate:types`
 
-8. To test run `sh test/demo.sh`
+8. Run `npm run dev`
+
+9. To test run `sh test/demo.sh`
