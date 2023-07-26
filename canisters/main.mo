@@ -265,7 +265,7 @@ actor Fiat {
 
     ///////////////////////// Admin Fucntion /////////////////////////
 
-    public shared({caller}) func get_all_invoices_to_admin() : async Http.Response<Http.ResponseStatus<[Invoice], {}>> {
+    public query({caller}) func get_all_invoices_to_admin() : async Http.Response<Http.ResponseStatus<[Invoice], {}>> {
 
         if (not(Validation.isEqual(owner, Principal.toText(caller)))) {
             return Utils.generalResponse(false, Messages.not_owner, #err({}), Http.Status.UnprocessableEntity);
@@ -359,7 +359,7 @@ actor Fiat {
 
     ///////////////////////// Admin Fucntion /////////////////////////
 
-    public query({caller}) func get_my_invoices() : async [Invoice] {
+    public query({caller}) func get_my_invoices() : async Http.Response<Http.ResponseStatus<[Invoice], {}>> {
         // Retrieve the list of invoice numbers belonging to the caller
         var invoiceNumberList : List.List<Nat> = switch (Trie.find(ownerInvoicesTrie, Utils.keyPrincipal(caller),Principal.equal)) {
             case null List.nil<Nat>();
@@ -367,13 +367,18 @@ actor Fiat {
         };
 
         // Convert the list of invoice numbers into an array of invoices
-        List.toArray(List.map<Nat, Invoice>(invoiceNumberList, func (invoiceNo: Nat): Invoice { 
+        let arr = List.toArray(List.map<Nat, Invoice>(invoiceNumberList, func (invoiceNo: Nat): Invoice { 
             // Retrieve the invoice value using the invoice number
             let invoiceVal = Trie.find(invoicesTrie, Utils.keyNat(invoiceNo), Nat.equal);
             return switch(invoiceVal) {
                 case (?invoice) invoice;
             };
         }));
+
+        return Utils.generalResponse(true, 
+            Messages.success_operation,
+            #success(arr), 
+            Http.Status.OK);
     };
 
     public shared({caller}) func change_invoice_status (invoiceReq: Types.Request.ConfirmInvoiceBody) : async Http.Response<Http.ResponseStatus<Types.Response.ConfirmInvoiceBody, {}>> {

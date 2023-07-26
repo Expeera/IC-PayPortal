@@ -108,7 +108,7 @@ service : {
   getOwner: () -> (text);
   get_actor_id_as_text: () -> (text) query;
   get_all_invoices_to_admin: () -> (Response);
-  get_my_invoices: () -> (vec Invoice) query;
+  get_my_invoices: () -> (Response) query;
   invoiceCount: () -> (nat);
   isOwner: () -> (bool) query;
 }

@@ -18,53 +18,7 @@ export default function MyInvoices() {
   }
   const [selectedInvoice, setSelectedInvoice] = useState(null)
   const navigate = useNavigate()
-  const dummyData = [
-    {
-      id: "1",
-      owner: "John Doe",
-      amount: 100,
-      currency: "USD",
-      paymentMethod: "Credit Card",
-      status: "Paid",
-      createdAt: Date.now() - 86400000, // 1 day ago
-    },
-    {
-      id: "2",
-      owner: "Jane Smith",
-      amount: 50,
-      currency: "EUR",
-      paymentMethod: "PayPal",
-      status: "Pending",
-      createdAt: Date.now() - 172800000, // 2 days ago
-    },
-    {
-      id: "3",
-      owner: "Michael Johnson",
-      amount: 200,
-      currency: "GBP",
-      paymentMethod: "Bank Transfer",
-      status: "Paid",
-      createdAt: Date.now() - 259200000, // 3 days ago
-    },
-    {
-      id: "4",
-      owner: "Emily Brown",
-      amount: 75,
-      currency: "CAD",
-      paymentMethod: "Credit Card",
-      status: "Paid",
-      createdAt: Date.now() - 345600000, // 4 days ago
-    },
-    {
-      id: "5",
-      owner: "William Lee",
-      amount: 120,
-      currency: "AUD",
-      paymentMethod: "PayPal",
-      status: "Pending",
-      createdAt: Date.now() - 432000000, // 5 days ago
-    },
-  ]
+  
   const [invoices, setInvoices] = useState([])
   if (!isAuthenticated) {
     // navigate("/auth/login")
@@ -76,15 +30,23 @@ export default function MyInvoices() {
       if (isOwnerVal) {
         navigate("/admin")
       }
+      
+      actor.get_my_invoices()
+        .then((data) => {
+          console.log("invoices", { data })
 
-      actor
-        .get_my_invoices()
-        .then(async (data) => {
-          console.log("woened ", { data })
-          setInvoices(data)
+          if (data.status) {
+            if ("success" in data.body) {
+              setInvoices(data.body.success)
+            }
+            // toast.success(data.message)
+          } else {
+            toast.error(data.message)
+          }
         })
         .catch((err) => {
-          console.log(err)
+          console.log("invoices err", { err })
+          toast.error(err.message)
         })
     }
 

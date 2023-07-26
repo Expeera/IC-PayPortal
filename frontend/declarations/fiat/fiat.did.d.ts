@@ -88,7 +88,7 @@ export interface _SERVICE {
   'getOwner' : ActorMethod<[], string>,
   'get_actor_id_as_text' : ActorMethod<[], string>,
   'get_all_invoices_to_admin' : ActorMethod<[], Response>,
-  'get_my_invoices' : ActorMethod<[], Array<Invoice>>,
+  'get_my_invoices' : ActorMethod<[], Response>,
   'invoiceCount' : ActorMethod<[], bigint>,
   'isOwner' : ActorMethod<[], boolean>,
 }

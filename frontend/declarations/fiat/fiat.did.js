@@ -98,7 +98,7 @@ export const idlFactory = ({ IDL }) => {
     'getOwner' : IDL.Func([], [IDL.Text], []),
     'get_actor_id_as_text' : IDL.Func([], [IDL.Text], ['query']),
     'get_all_invoices_to_admin' : IDL.Func([], [Response], []),
-    'get_my_invoices' : IDL.Func([], [IDL.Vec(Invoice)], ['query']),
+    'get_my_invoices' : IDL.Func([], [Response], ['query']),
     'invoiceCount' : IDL.Func([], [IDL.Nat], []),
     'isOwner' : IDL.Func([], [IDL.Bool], ['query']),
   });
