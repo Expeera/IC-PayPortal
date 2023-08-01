@@ -269,7 +269,7 @@ export default function Form() {
   }
 
   if (!isAuthenticated) {
-    // navigate("/auth/login")
+    navigate("/auth/login")
   }
 
   useEffect(() => {

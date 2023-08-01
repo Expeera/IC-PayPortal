@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { toast } from "react-toastify"
 import { AppContext } from "../../App"
+import { useNavigate } from "react-router-dom"
 
 export interface ConfirmInvoiceBody {
   invoiceNo: number;
@@ -15,6 +16,9 @@ export default function Cancel() {
   const { isAuthenticated, actor } = useContext(AppContext)
 
   const [message, setMessage] = useState("");
+
+  const navigate = useNavigate()
+
 
   useEffect(() => {
     
@@ -44,6 +48,10 @@ export default function Cancel() {
           // toast.error("Payload Too Large")
           // toast.error("Not Authorized to mint")
         })
+    }
+
+    if (!isAuthenticated) {
+      navigate("/auth/login")
     }
 
     console.log("isAuthenticated", isAuthenticated)

@@ -11,6 +11,7 @@ import Array "mo:base/Array";
 import List "mo:base/List";
 import Time "mo:base/Time";
 import Principal "mo:base/Principal";
+import Bool "mo:base/Bool";
 
 import Http "http";
 import Types "types";
@@ -20,6 +21,7 @@ import Utils "utils";
 import Base64 "lib/Base64";
 import Service "service";
 import Util "mo:xtended-numbers/Util";
+import Nat16 "mo:base/Nat16";
 
 
 actor Fiat {
@@ -381,6 +383,10 @@ actor Fiat {
             Http.Status.OK);
     };
 
+    // public func _change_invoice_status (invoiceReq: Types.Request.ConfirmInvoiceBody) : async Http.Response<Http.ResponseStatus<Types.Response.ConfirmInvoiceBody, {}>> {
+
+    // };
+
     public shared({caller}) func change_invoice_status (invoiceReq: Types.Request.ConfirmInvoiceBody) : async Http.Response<Http.ResponseStatus<Types.Response.ConfirmInvoiceBody, {}>> {
         // Check if the caller is anonymous
         if (Validation.isAnonymous(caller)) {
@@ -667,7 +673,7 @@ actor Fiat {
         count += 1;
 
         // Print a debug message to show the current value of 'count'.
-        Debug.print("no! " # Nat.toText(count));
+        // Debug.print("no! " # Nat.toText(count));
     };
 
 }
