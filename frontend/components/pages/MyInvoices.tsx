@@ -86,7 +86,7 @@ export default function MyInvoices() {
               {invoices.map((item) => (
                 <tr key={item.id}>
                   <td>{parseInt(item.id)}</td>
-                  <td>{item.amount}</td>
+                  <td>{parseFloat(item.amount).toFixed(2)}</td>
                   <td>{item.currency}</td>
                   <td>{item.paymentMethod}</td>
                   <td>{item.status}</td>
@@ -131,7 +131,7 @@ export default function MyInvoices() {
                         <Modal.Body>
                           <div className="d-flex gap-2 justify-content-around">
                             <p>
-                              Total Amount: {selectedInvoice?.amount}{" "}
+                              Total Amount: {parseFloat(selectedInvoice?.amount).toFixed(2)}{" "}
                               {selectedInvoice?.currency}
                             </p>
                             <p>
@@ -143,7 +143,7 @@ export default function MyInvoices() {
                             className="table-container"
                             style={{ width: "100%" }}
                           >
-                            <h3>Table Title</h3>
+                            <h3>Items</h3>
                             <table
                               className="styled-table"
                               style={{ overflowY: "scroll", width: "100%" }}

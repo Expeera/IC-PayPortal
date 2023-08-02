@@ -48,9 +48,9 @@ export default function Success() {
         })
     }
 
-    if (!isAuthenticated) {
-      navigate("/auth/login")
-    }
+    // if (!isAuthenticated) {
+    //   navigate("/auth/login")
+    // }
 
     console.log("isAuthenticated", isAuthenticated)
     console.log("actor", actor)
