@@ -107,8 +107,8 @@ service : {
   create_invoice: (CreateInvoiceBody) -> (Response_1);
   getOwner: () -> (text);
   get_actor_id_as_text: () -> (text) query;
-  get_all_invoices_to_admin: () -> (Response);
+  get_all_invoices_to_admin: () -> (Response) query;
   get_my_invoices: () -> (Response) query;
-  invoiceCount: () -> (nat);
+  invoiceCount: () -> (nat) query;
   isOwner: () -> (bool) query;
 }

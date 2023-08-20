@@ -17,7 +17,7 @@ export interface Challenge {
 }
 export type ChallengeKey = string;
 export interface ChallengeResult { 'key' : ChallengeKey, 'chars' : string }
-export type CredentialId = Uint8Array;
+export type CredentialId = Uint8Array | number[];
 export interface Delegation {
   'pubkey' : PublicKey,
   'targets' : [] | [Array<Principal>],
@@ -45,11 +45,11 @@ export type HeaderField = [string, string];
 export interface HttpRequest {
   'url' : string,
   'method' : string,
-  'body' : Uint8Array,
+  'body' : Uint8Array | number[],
   'headers' : Array<HeaderField>,
 }
 export interface HttpResponse {
-  'body' : Uint8Array,
+  'body' : Uint8Array | number[],
   'headers' : Array<HeaderField>,
   'streaming_strategy' : [] | [StreamingStrategy],
   'status_code' : number,
@@ -69,7 +69,7 @@ export type KeyType = { 'platform' : null } |
   { 'seed_phrase' : null } |
   { 'cross_platform' : null } |
   { 'unknown' : null };
-export type PublicKey = Uint8Array;
+export type PublicKey = Uint8Array | number[];
 export type Purpose = { 'authentication' : null } |
   { 'recovery' : null };
 export type RegisterResponse = { 'bad_challenge' : null } |
@@ -77,12 +77,12 @@ export type RegisterResponse = { 'bad_challenge' : null } |
   { 'registered' : { 'user_number' : UserNumber } };
 export type SessionKey = PublicKey;
 export interface SignedDelegation {
-  'signature' : Uint8Array,
+  'signature' : Uint8Array | number[],
   'delegation' : Delegation,
 }
 export interface StreamingCallbackHttpResponse {
   'token' : [] | [Token],
-  'body' : Uint8Array,
+  'body' : Uint8Array | number[],
 }
 export type StreamingStrategy = {
     'Callback' : { 'token' : Token, 'callback' : [Principal, string] }

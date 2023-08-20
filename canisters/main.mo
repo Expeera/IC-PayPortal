@@ -54,7 +54,7 @@ actor Fiat {
     };
 
     // Return the number of invoices in the trie
-    public func invoiceCount() : async Nat {
+    public query func invoiceCount() : async Nat {
         Trie.size(invoicesTrie)
     };
 
@@ -62,7 +62,7 @@ actor Fiat {
     // It takes in the following parameter:
     // - 'items': An array of 'Types.Item' representing the items for which the total price will be calculated.
     // The function returns an asynchronous Float representing the calculated total price.
-    private func _calculate_total_price(items: [Types.Item]): async Float {
+    private func _calculate_total_price(items: [Types.Item]): Float {
         // Use 'Array.foldLeft' to iterate through the 'items' array and calculate the sum of item prices.
         // The starting sum is set to 0, and for each item 'x', the price is added to the 'sumSoFar'.
         return Array.foldLeft<Types.Item, Float>(
@@ -75,7 +75,7 @@ actor Fiat {
 
     public shared ({ caller }) func create_invoice(invoice : Types.Request.CreateInvoiceBody) : async Http.Response<Http.ResponseStatus<Types.Response.CreateInvoiceBody, {}>> {
         
-        let amount = (await _calculate_total_price(invoice.items));
+        let amount = _calculate_total_price(invoice.items);
         // Check if the caller is anonymous
         if (Validation.isAnonymous(caller)) {
             return Utils.generalResponse(false, Messages.not_authorized, #err({}), Http.Status.UnprocessableEntity);
@@ -155,7 +155,7 @@ actor Fiat {
                         // If the session is of type '_session' (when the session type is known but not specified in this code snippet),
                         // call the '_create_invoice' function with the provided parameters and return its result.
                         // The '_create_invoice' function seems to be responsible for creating the actual invoice.
-                        return await _create_invoice(caller, invoice, _session, "Stripe");
+                        return  _create_invoice(caller, invoice, _session, "Stripe");
                     };
                 };
             };
@@ -196,7 +196,7 @@ actor Fiat {
                         // If the session is of type '_session' (when the session type is known but not specified in this code snippet),
                         // call the '_create_invoice' function with the provided parameters and return its result.
                         // The '_create_invoice' function seems to be responsible for creating the actual invoice.
-                        return await _create_invoice(caller, invoice, _session, "PayPal");
+                        return _create_invoice(caller, invoice, _session, "PayPal");
                     };
                 };
             };
@@ -210,7 +210,7 @@ actor Fiat {
     // - '_session': The session data (of type 'Types.CreateSession') related to the payment method.
     // - 'payment': The payment method used for the invoice (e.g., "PayPal" or "Stripe").
     // The function returns an asynchronous HTTP response of type 'Http.Response<Http.ResponseStatus<Types.Response.CreateInvoiceBody, {}>>'.
-    private func _create_invoice(caller: Principal, invoice: Types.Request.CreateInvoiceBody, _session: Types.CreateSession, payment: Text): async Http.Response<Http.ResponseStatus<Types.Response.CreateInvoiceBody, {}>> {
+    private func _create_invoice(caller: Principal, invoice: Types.Request.CreateInvoiceBody, _session: Types.CreateSession, payment: Text): Http.Response<Http.ResponseStatus<Types.Response.CreateInvoiceBody, {}>> {
 
         // Increment the invoice number (assuming 'noInvoice' is a global variable)
         noInvoice += 1;
