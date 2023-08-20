@@ -208,7 +208,7 @@ module {
                                 { name= "Authorization"; value = "Bearer " # _session.access_token }
                             ];
 
-                            let request_body_str: Text = "{\"intent\":\"CAPTURE\",\"purchase_units\":[{\"amount\":{\"currency_code\":\""# invoice.currency #"\",\"value\":\""# Int.toText(Float.toInt(invoice.amount)) #"\"}}],\"application_context\":{\"return_url\":\""# Config.get_paypal_success_url(invoiceNo) #"\",\"cancel_url\":\""# Config.get_paypal_cancel_url(invoiceNo) #"\"}}";
+                            let request_body_str: Text = "{\"intent\":\"CAPTURE\",\"purchase_units\":[{\"amount\":{\"currency_code\":\""# invoice.currency #"\",\"value\":\""# Utils.convertNumber(invoice.amount) #"\"}}],\"application_context\":{\"return_url\":\""# Config.get_paypal_success_url(invoiceNo) #"\",\"cancel_url\":\""# Config.get_paypal_cancel_url(invoiceNo) #"\"}}";
                             let request_body_as_Blob: Blob = Text.encodeUtf8(request_body_str);
 
                             let http_request : Http.IcHttp.HttpRequest = {

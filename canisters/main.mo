@@ -675,5 +675,5 @@ actor Fiat {
         // Print a debug message to show the current value of 'count'.
         // Debug.print("no! " # Nat.toText(count));
     };
-
+    
 }

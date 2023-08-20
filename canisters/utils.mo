@@ -2,13 +2,16 @@ import Iter "mo:base/Iter";
 import Array "mo:base/Array";
 import Nat8 "mo:base/Nat8";
 import Nat32 "mo:base/Nat32";
+import Float "mo:base/Float";
 import Trie "mo:base/Trie";
 import Hash "mo:base/Hash";
 import Char "mo:base/Char";
+import Int "mo:base/Int";
 import Text "mo:base/Text";
 import Principal "mo:base/Principal";
 import Prim "mo:⛔";
 import Http "http";
+import Debug "mo:base/Debug";
 
 module {
     
@@ -50,6 +53,21 @@ module {
             res := res # Nat8.toText(val);
         };
         res
+    };
+
+    public func convertNumber(originalNumber:Float) : Text {
+        let number = Float.floor(originalNumber);
+        let t = Float.toText(originalNumber - number);
+        var index = 1;
+        var str = "";
+        for (c in Text.toIter(t)) {
+            if(index > 1 and index < 5) {
+                str #= Char.toText(c);
+            };
+            index += 1;
+        };
+
+        Int.toText(Float.toInt(number)) # str
     };
 
 };
