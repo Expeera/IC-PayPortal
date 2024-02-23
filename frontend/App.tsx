@@ -113,11 +113,11 @@ function App() {
               ></Route>
             </Route>
             <Route
-              path="stripe/success/:invoiceNo/:sessionId"
+              path="stripe/success/:invoiceNo"
               element={<Success />}
             />
             <Route
-              path="stripe/cancel/:invoiceNo/:sessionId"
+              path="stripe/cancel/:invoiceNo"
               element={<Cancel />}
             />
 

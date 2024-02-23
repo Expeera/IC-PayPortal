@@ -41,7 +41,7 @@ actor Fiat {
     private stable var pendingInvoiceList: List.List<Nat> = List.nil<Nat>();
 
     // Owner's identifier
-    private var owner:Text = "f6t7z-gjhf4-wta43-23f57-twrsd-jb5cv-eyk57-5cgwx-753cl-eaqjh-lqe";
+    private var owner:Text = "4m33l-au6pl-u6xiu-uf6t3-pmkhv-qev4s-v4khz-gvwxf-tc4uw-ia56g-lqe";
 
     // Owner's identifier
     public func getOwner() : async Text {
@@ -108,12 +108,12 @@ actor Fiat {
         // Check if the payment method specified in the invoice is "Stripe"
         if (Validation.isEqual(invoice.paymentMethod, "Stripe")) {
             // If it's "Stripe", create a Stripe payment session using the 'Service.Stripe.create_session' function
-            let sessionResult: Result.Result<?Service.Stripe.CreateSession, ?Service.Stripe.ErrorResponse> = await Service.Stripe.create_session(noInvoice + 1, invoice);
+            let sessionResult: Result.Result<?Service.Stripe.CreateSession, ?Service.Message> = await Service.Stripe.create_session(noInvoice + 1, invoice);
             // Call the '_stripe_invoice' function with the appropriate parameters and wait for the result
             return await _stripe_invoice(caller, invoice, sessionResult);
         } else {
             // If the payment method is not "Stripe", assume it's "PayPal" and create a PayPal payment session
-            let sessionResult: Result.Result<?Service.Paypal.CreateOrder, ?Service.Paypal.ErrorResponse> = await Service.Paypal.create_order(noInvoice + 1, invoice);
+            let sessionResult: Result.Result<?Service.Paypal.CreateOrder, ?Service.Message> = await Service.Paypal.create_order(noInvoice + 1, invoice);
             // Call the '_paypal_invoice' function with the appropriate parameters and wait for the result
             return await _paypal_invoice(caller, invoice, sessionResult);
         };
@@ -127,7 +127,7 @@ actor Fiat {
     // - 'invoice': The data of the invoice to be created (of type 'Types.Request.CreateInvoiceBody').
     // - 'sessionResult': The result of a previous operation, either an Ok value containing 'Service.Stripe.CreateSession' or an Err value containing 'Service.Stripe.ErrorResponse'.
     // The function returns an asynchronous HTTP response of type 'Http.Response<Http.ResponseStatus<Types.Response.CreateInvoiceBody, {}>>'.
-    private func _stripe_invoice(caller: Principal, invoice: Types.Request.CreateInvoiceBody, sessionResult: Result.Result<?Service.Stripe.CreateSession, ?Service.Stripe.ErrorResponse>): async Http.Response<Http.ResponseStatus<Types.Response.CreateInvoiceBody, {}>> {
+    private func _stripe_invoice(caller: Principal, invoice: Types.Request.CreateInvoiceBody, sessionResult: Result.Result<?Service.Stripe.CreateSession, ?Service.Message>): async Http.Response<Http.ResponseStatus<Types.Response.CreateInvoiceBody, {}>> {
         // The function uses a 'switch' statement to handle different cases based on 'sessionResult'.
         return switch (sessionResult) {
             case (#err err) {
@@ -140,7 +140,7 @@ actor Fiat {
                     case (?_err) {
                         // If the error is of type '_err' (when the error type is known but not specified in this code snippet),
                         // return an internal server error with the error message and an empty response body.
-                        return Utils.generalResponse(false, _err.error.message, #err({}), Http.Status.InternalServerError);
+                        return Utils.generalResponse(false, _err, #err({}), Http.Status.InternalServerError);
                     };
                 };
             };
@@ -168,7 +168,7 @@ actor Fiat {
     // - 'invoice': The data of the invoice to be created (of type 'Types.Request.CreateInvoiceBody').
     // - 'sessionResult': The result of a previous operation, either an Ok value containing 'Service.Paypal.CreateOrder' or an Err value containing 'Service.Paypal.ErrorResponse'.
     // The function returns an asynchronous HTTP response of type 'Http.Response<Http.ResponseStatus<Types.Response.CreateInvoiceBody, {}>>'.
-    private func _paypal_invoice(caller: Principal, invoice: Types.Request.CreateInvoiceBody, sessionResult: Result.Result<?Service.Paypal.CreateOrder, ?Service.Paypal.ErrorResponse>): async Http.Response<Http.ResponseStatus<Types.Response.CreateInvoiceBody, {}>> {
+    private func _paypal_invoice(caller: Principal, invoice: Types.Request.CreateInvoiceBody, sessionResult: Result.Result<?Service.Paypal.CreateOrder, ?Service.Message>): async Http.Response<Http.ResponseStatus<Types.Response.CreateInvoiceBody, {}>> {
         // The function uses a 'switch' statement to handle different cases based on 'sessionResult'.
         return switch (sessionResult) {
             case (#err err) {
@@ -181,7 +181,7 @@ actor Fiat {
                     case (?_err) {
                         // If the error is of type '_err' (when the error type is known but not specified in this code snippet),
                         // return an internal server error with the error description and an empty response body.
-                        return Utils.generalResponse(false, _err.error_description, #err({}), Http.Status.InternalServerError);
+                        return Utils.generalResponse(false, _err, #err({}), Http.Status.InternalServerError);
                     };
                 };
             };
@@ -425,12 +425,12 @@ actor Fiat {
                 // Check if the payment method specified in 'invoiceFind' is "Stripe".
                 if (Validation.isEqual(invoiceFind.paymentMethod, "Stripe")) {
                     // If the payment method is "Stripe", retrieve the session information using 'Service.Stripe.retrieve_session' function.
-                    let invoiceResult: Result.Result<?Service.Stripe.RetrieveSession, ?Service.Stripe.ErrorResponse> = await Service.Stripe.retrieve_session(invoiceFind.transactionId);
+                    let invoiceResult: Result.Result<?Service.Stripe.RetrieveSession, ?Service.Message> = await Service.Stripe.retrieve_session(invoiceFind.transactionId);
                     // Call the '_change_invoice_status_stripe' function with the retrieved information and wait for the result.
                     return await _change_invoice_status_stripe(invoiceFind, invoiceReq, invoiceResult);
                 } else {
                     // If the payment method is not "Stripe", assume it's "PayPal" and retrieve the order information using 'Service.Paypal.retrieve_order' function.
-                    let invoiceResult: Result.Result<?Service.Paypal.RetrieveOrder, ?Service.Paypal.ErrorResponse> = await Service.Paypal.retrieve_order(invoiceFind.transactionId);
+                    let invoiceResult: Result.Result<?Service.Paypal.RetrieveOrder, ?Service.Message> = await Service.Paypal.retrieve_order(invoiceFind.transactionId);
                     // Call the '_change_invoice_status_paypal' function with the retrieved information and wait for the result.
                     return await _change_invoice_status_paypal(invoiceFind, invoiceReq, invoiceResult);
                 };
@@ -446,7 +446,7 @@ actor Fiat {
     // - 'invoiceReq': The request to confirm the invoice (of type 'Types.Request.ConfirmInvoiceBody').
     // - 'invoiceResult': The result of retrieving the session from Stripe (of type 'Result.Result<?Service.Stripe.RetrieveSession, ?Service.Stripe.ErrorResponse>').
     // The function returns an asynchronous HTTP response of type 'Http.Response<Http.ResponseStatus<Types.Response.ConfirmInvoiceBody, {}>>'.
-    private func _change_invoice_status_stripe(invoiceFind: Invoice, invoiceReq: Types.Request.ConfirmInvoiceBody, invoiceResult: Result.Result<?Service.Stripe.RetrieveSession, ?Service.Stripe.ErrorResponse>): async Http.Response<Http.ResponseStatus<Types.Response.ConfirmInvoiceBody, {}>> {
+    private func _change_invoice_status_stripe(invoiceFind: Invoice, invoiceReq: Types.Request.ConfirmInvoiceBody, invoiceResult: Result.Result<?Service.Stripe.RetrieveSession, ?Service.Message>): async Http.Response<Http.ResponseStatus<Types.Response.ConfirmInvoiceBody, {}>> {
         // The function uses a 'switch' statement to handle different cases based on 'invoiceResult'.
         switch (invoiceResult) {
             case (#err err) {
@@ -459,7 +459,7 @@ actor Fiat {
                     case (?_err) {
                         // If the error is of type '_err' (when the error type is known but not specified in this code snippet),
                         // return an internal server error with the error message and an empty response body.
-                        return Utils.generalResponse(false, _err.error.message, #err({}), Http.Status.InternalServerError);
+                        return Utils.generalResponse(false, _err, #err({}), Http.Status.InternalServerError);
                     };
                 };
             };
@@ -499,7 +499,7 @@ actor Fiat {
     // - 'invoiceReq': The request to confirm the invoice (of type 'Types.Request.ConfirmInvoiceBody').
     // - 'invoiceResult': The result of retrieving the order from PayPal (of type 'Result.Result<?Service.Paypal.RetrieveOrder, ?Service.Paypal.ErrorResponse>').
     // The function returns an asynchronous HTTP response of type 'Http.Response<Http.ResponseStatus<Types.Response.ConfirmInvoiceBody, {}>>'.
-    private func _change_invoice_status_paypal(invoiceFind: Invoice, invoiceReq: Types.Request.ConfirmInvoiceBody, invoiceResult: Result.Result<?Service.Paypal.RetrieveOrder, ?Service.Paypal.ErrorResponse>): async Http.Response<Http.ResponseStatus<Types.Response.ConfirmInvoiceBody, {}>> {
+    private func _change_invoice_status_paypal(invoiceFind: Invoice, invoiceReq: Types.Request.ConfirmInvoiceBody, invoiceResult: Result.Result<?Service.Paypal.RetrieveOrder, ?Service.Message>): async Http.Response<Http.ResponseStatus<Types.Response.ConfirmInvoiceBody, {}>> {
         // The function uses a 'switch' statement to handle different cases based on 'invoiceResult'.
         switch (invoiceResult) {
             case (#err err) {
@@ -512,7 +512,7 @@ actor Fiat {
                     case (?_err) {
                         // If the error is of type '_err' (when the error type is known but not specified in this code snippet),
                         // return an internal server error with the error description and an empty response body.
-                        return Utils.generalResponse(false, _err.error_description, #err({}), Http.Status.InternalServerError);
+                        return Utils.generalResponse(false, _err, #err({}), Http.Status.InternalServerError);
                     };
                 };
             };

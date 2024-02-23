@@ -37,6 +37,7 @@ export function useAuthClient(props?: UseAuthClientProps) {
   // const [leasePricePerDay, setLeasePricePerDay] = useState<BigInt>()
 
   const initializeAuthClient = (): Promise<void> => {
+
     return AuthClient.create({
       idleOptions: {
         disableDefaultIdleCallback: true,
