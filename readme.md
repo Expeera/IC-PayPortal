@@ -231,7 +231,7 @@ invoice_count: () : Nat
 The `invoice_count` function is a query that takes no input parameters and returns a single natural number (nat). This function is designed to retrieve the total count of invoices in the system. It provides a convenient way for users or administrators to obtain the current number of invoices present, assisting in various statistical analyses or monitoring the growth of invoices over time. For implementation details, refer to the actual code and any accompanying documentation, which may include optimizations and other relevant information.
 
 
-7. ### Is Owner:
+### 7. Is Owner:
 
 ```motoko
 is_owner: () : Bool
