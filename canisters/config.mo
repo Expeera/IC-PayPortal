@@ -13,12 +13,12 @@ module {
 
     private let liveConfig = {
         // Define the frontend canister ID used for constructing URLs
-        frontendCanisterId= "bkyz2-fmaaa-aaaaa-qaaaq-cai";
+        frontendCanisterId= "3356i-cqaaa-aaaao-axdqa-cai";
         baseUrl= "icp0.io";
         http= "https://";
     };
 
-    private let config = devConfig;
+    private let config = liveConfig;
 
     // Function to generate the Stripe success URL for a specific invoice
     public func get_stripe_success_url (invoiceNo:Nat): Text { 

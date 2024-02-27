@@ -5,7 +5,7 @@ export fiat_canister=$(dfx canister id fiat)
 
 echo "fiat canister = " "${fiat_canister}"
 
-echo dfx canister call ${fiat_canister} invoiceCount "()"
+echo dfx canister call ${fiat_canister} invoice_count "()"
 
 dfx identity new user1 --disable-encryption || true
 
@@ -15,7 +15,7 @@ dfx identity get-principal
 export USER1=$(dfx identity get-principal)
 echo USER1 "${USER1}"
 
-export invoice_count=$(dfx canister call ${fiat_canister} invoiceCount)
+export invoice_count=$(dfx canister call ${fiat_canister} invoice_count)
 echo "Number Of Invoices = " ${invoice_count}
 
 if [${invoice_count} < 2]

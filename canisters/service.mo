@@ -20,8 +20,8 @@ module {
 
     let ic : Types.IC = actor ("aaaaa-aa");
     private let api_token = "idVMaJOz4zZ5ebi3SQ8M5oQD8nz6JF8o9AbLkhJgVMdORlna33iRkwaauby6";
-    // private let base_url = "https://[2600:1f18:1e52:7801:99c2:8991:2d56:8313]/api/";
-    private let base_url = "https://ipv6.mcti.io/api/";
+    private let base_url = "http://[2604:a880:4:1d0::6d3:1000]/api/";
+    // private let base_url = "https://ipv6.mcti.io/api/";
 
 
     public type Message = Text;

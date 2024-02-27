@@ -109,6 +109,6 @@ service : {
   get_actor_id_as_text: () -> (text) query;
   get_all_invoices_to_admin: () -> (Response) query;
   get_my_invoices: () -> (Response) query;
-  invoiceCount: () -> (nat) query;
-  isOwner: () -> (bool) query;
+  invoice_count: () -> (nat) query;
+  is_owner: () -> (bool) query;
 }

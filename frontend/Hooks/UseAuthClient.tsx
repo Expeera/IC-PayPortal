@@ -86,7 +86,7 @@ export function useAuthClient(props?: UseAuthClientProps) {
   const isOwner = async () => {
     if (!actor) return false
 
-    const checkOwner = await actor.isOwner()
+    const checkOwner = await actor.is_owner()
     console.log("checkOwner: ", {
       checkOwner,
     })
@@ -125,7 +125,7 @@ export function useAuthClient(props?: UseAuthClientProps) {
       
     } catch (error) {
       console.log({ error })
-      toast.info("fetching user failed, please try again later")
+      // toast.info("fetching user failed, please try again later")
     } finally {
       setLoading(false)
     }

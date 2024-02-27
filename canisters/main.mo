@@ -49,12 +49,12 @@ actor Fiat {
     };
 
     // Check if the caller is the owner
-    public shared query (msg) func isOwner() : async Bool {
+    public shared query (msg) func is_owner() : async Bool {
         return (owner == Principal.toText(msg.caller))
     };
 
     // Return the number of invoices in the trie
-    public query func invoiceCount() : async Nat {
+    public query func invoice_count() : async Nat {
         Trie.size(invoicesTrie)
     };
 
