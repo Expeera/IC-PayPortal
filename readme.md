@@ -2,11 +2,12 @@
 
 The Fiat Payment Module for Motoko is a library that provides developers with a set of functions for managing fiat payments on the Internet Computer Protocol (ICP). This module enables seamless integration of popular fiat payment gateways such as `Stripe` and `Paypal` into Motoko applications.
 
-[Live Demo](https://3356i-cqaaa-aaaao-axdqa-cai.icp0.io/)
+[Live Demo](https://3356i-cqaaa-aaaao-axdqa-cai.icp0.io/): https​&#65279;://3356i-cqaaa-aaaao-axdqa-cai.icp0.io
 
-[The IPV4 base URL of the payment service: ](https://ipv6.mcti.io) https://ipv6.mcti.io
+[The IPV4 base URL of the payment service: ](https://ipv6.mcti.io) 
+https​&#65279;://ipv6.mcti.io
 
-[The IPV6 base URL of the payment service: ](https://[2604:a880:4:1d0::6d3:1000]) https://[2604:a880:4:1d0::6d3:1000]
+[The IPV6 base URL of the payment service: ](https://[2604:a880:4:1d0::6d3:1000]) https​&#65279;://[2604:a880:4:1d0::6d3:1000]
 
 
 ## Features
