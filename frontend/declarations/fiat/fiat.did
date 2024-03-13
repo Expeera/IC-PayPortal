@@ -1,3 +1,8 @@
+type TransformArgs = 
+ record {
+   context: blob;
+   response: HttpResponsePayload;
+ };
 type StatusCode = nat;
 type Response_3 = 
  record {
@@ -67,6 +72,17 @@ type Invoice =
    status: text;
    transactionId: text;
  };
+type HttpResponsePayload = 
+ record {
+   body: vec nat8;
+   headers: vec HttpHeader;
+   status: nat;
+ };
+type HttpHeader = 
+ record {
+   name: text;
+   value: text;
+ };
 type CreateInvoiceBody__1 = 
  record {
    id: nat;
@@ -101,6 +117,12 @@ type ConfirmInvoiceAdminBody =
    isCompleted: bool;
    paymentMethod: text;
  };
+type CanisterHttpResponsePayload = 
+ record {
+   body: vec nat8;
+   headers: vec HttpHeader;
+   status: nat;
+ };
 service : {
   change_invoice_status: (ConfirmInvoiceBody) -> (Response_3);
   change_invoice_status_to_admin: (ConfirmInvoiceAdminBody) -> (Response_2);
@@ -111,4 +133,8 @@ service : {
   get_my_invoices: () -> (Response) query;
   invoice_count: () -> (nat) query;
   is_owner: () -> (bool) query;
+  test: () -> (text);
+  test1: () -> (text);
+  test2: () -> (text);
+  transform: (TransformArgs) -> (CanisterHttpResponsePayload) query;
 }

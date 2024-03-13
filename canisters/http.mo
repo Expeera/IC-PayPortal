@@ -17,6 +17,7 @@ module {
             url : Text;
             headers : [HttpHeader];
             body : ?Blob;
+            ingress_expirey: ?Nat64
         };
 
         public type HttpMethod = {

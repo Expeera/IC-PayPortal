@@ -87,6 +87,21 @@ export const idlFactory = ({ IDL }) => {
     'message' : IDL.Text,
     'status_code' : StatusCode,
   });
+  const HttpHeader = IDL.Record({ 'value' : IDL.Text, 'name' : IDL.Text });
+  const HttpResponsePayload = IDL.Record({
+    'status' : IDL.Nat,
+    'body' : IDL.Vec(IDL.Nat8),
+    'headers' : IDL.Vec(HttpHeader),
+  });
+  const TransformArgs = IDL.Record({
+    'context' : IDL.Vec(IDL.Nat8),
+    'response' : HttpResponsePayload,
+  });
+  const CanisterHttpResponsePayload = IDL.Record({
+    'status' : IDL.Nat,
+    'body' : IDL.Vec(IDL.Nat8),
+    'headers' : IDL.Vec(HttpHeader),
+  });
   return IDL.Service({
     'change_invoice_status' : IDL.Func([ConfirmInvoiceBody], [Response_3], []),
     'change_invoice_status_to_admin' : IDL.Func(
@@ -101,6 +116,14 @@ export const idlFactory = ({ IDL }) => {
     'get_my_invoices' : IDL.Func([], [Response], ['query']),
     'invoice_count' : IDL.Func([], [IDL.Nat], ['query']),
     'is_owner' : IDL.Func([], [IDL.Bool], ['query']),
+    'test' : IDL.Func([], [IDL.Text], []),
+    'test1' : IDL.Func([], [IDL.Text], []),
+    'test2' : IDL.Func([], [IDL.Text], []),
+    'transform' : IDL.Func(
+        [TransformArgs],
+        [CanisterHttpResponsePayload],
+        ['query'],
+      ),
   });
 };
 export const init = ({ IDL }) => { return []; };

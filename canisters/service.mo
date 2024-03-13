@@ -7,6 +7,7 @@ import Debug "mo:base/Debug";
 import Text "mo:base/Text";
 import Int "mo:base/Int";
 import Nat8 "mo:base/Nat8";
+import Nat64 "mo:base/Nat64";
 import Float "mo:base/Float";
 import Cycles "mo:base/ExperimentalCycles";
 import serdeJson "mo:serde/JSON";
@@ -20,8 +21,8 @@ module {
 
     let ic : Types.IC = actor ("aaaaa-aa");
     private let api_token = "idVMaJOz4zZ5ebi3SQ8M5oQD8nz6JF8o9AbLkhJgVMdORlna33iRkwaauby6";
-    private let base_url = "https://[2604:a880:4:1d0::6d3:1000]/api/";
-    // private let base_url = "https://ipv6.mcti.io/api/";
+    // private let base_url = "https://[2604:a880:4:1d0::6d3:1000]/api/";
+    private let base_url = "https://ipv6.mcti.io/api/";
 
 
     public type Message = Text;
@@ -75,6 +76,7 @@ module {
                 headers = request_headers;
                 body = ?request_body_as_Blob; 
                 method = #post;
+                ingress_expirey= ?Nat64.fromNat(60);
             };
 
             // Minimum cycles needed to pass the CI tests. Cycles needed will vary on many things, such as the size of the HTTP response and subnet.
@@ -133,6 +135,7 @@ module {
                 headers = request_headers;
                 body = ?request_body_as_Blob; 
                 method = #post;
+                ingress_expirey= ?Nat64.fromNat(60);
             };
 
             // Minimum cycles needed to pass the CI tests. Cycles needed will vary on many things, such as the size of the HTTP response and subnet.
@@ -215,6 +218,7 @@ module {
                 headers = request_headers;
                 body = ?request_body_as_Blob; 
                 method = #post;
+                ingress_expirey= ?Nat64.fromNat(60);
             };
 
             Cycles.add(220_131_200_000); 
@@ -272,6 +276,7 @@ module {
                 headers = request_headers;
                 body = ?request_body_as_Blob; 
                 method = #post;
+                ingress_expirey= ?Nat64.fromNat(60);
             };
 
             // Minimum cycles needed to pass the CI tests. Cycles needed will vary on many things, such as the size of the HTTP response and subnet.

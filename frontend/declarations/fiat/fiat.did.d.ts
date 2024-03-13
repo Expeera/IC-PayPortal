@@ -1,6 +1,11 @@
 import type { Principal } from '@dfinity/principal';
 import type { ActorMethod } from '@dfinity/agent';
 
+export interface CanisterHttpResponsePayload {
+  'status' : bigint,
+  'body' : Uint8Array | number[],
+  'headers' : Array<HttpHeader>,
+}
 export interface ConfirmInvoiceAdminBody {
   'paymentMethod' : string,
   'isCompleted' : boolean,
@@ -26,6 +31,12 @@ export interface CreateInvoiceBody {
 export interface CreateInvoiceBody__1 {
   'id' : bigint,
   'payment' : { 'redirectUrl' : string, 'transactionId' : string },
+}
+export interface HttpHeader { 'value' : string, 'name' : string }
+export interface HttpResponsePayload {
+  'status' : bigint,
+  'body' : Uint8Array | number[],
+  'headers' : Array<HttpHeader>,
 }
 export interface Invoice {
   'id' : bigint,
@@ -78,6 +89,10 @@ export interface Response_3 {
   'status_code' : StatusCode,
 }
 export type StatusCode = bigint;
+export interface TransformArgs {
+  'context' : Uint8Array | number[],
+  'response' : HttpResponsePayload,
+}
 export interface _SERVICE {
   'change_invoice_status' : ActorMethod<[ConfirmInvoiceBody], Response_3>,
   'change_invoice_status_to_admin' : ActorMethod<
@@ -91,4 +106,8 @@ export interface _SERVICE {
   'get_my_invoices' : ActorMethod<[], Response>,
   'invoice_count' : ActorMethod<[], bigint>,
   'is_owner' : ActorMethod<[], boolean>,
+  'test' : ActorMethod<[], string>,
+  'test1' : ActorMethod<[], string>,
+  'test2' : ActorMethod<[], string>,
+  'transform' : ActorMethod<[TransformArgs], CanisterHttpResponsePayload>,
 }
