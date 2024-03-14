@@ -87,6 +87,12 @@ export const idlFactory = ({ IDL }) => {
     'message' : IDL.Text,
     'status_code' : StatusCode,
   });
+  const CreateSession = IDL.Record({ 'id' : IDL.Text, 'url' : IDL.Text });
+  const Message = IDL.Text;
+  const Result = IDL.Variant({
+    'ok' : IDL.Opt(CreateSession),
+    'err' : IDL.Opt(Message),
+  });
   const HttpHeader = IDL.Record({ 'value' : IDL.Text, 'name' : IDL.Text });
   const HttpResponsePayload = IDL.Record({
     'status' : IDL.Nat,
@@ -116,9 +122,7 @@ export const idlFactory = ({ IDL }) => {
     'get_my_invoices' : IDL.Func([], [Response], ['query']),
     'invoice_count' : IDL.Func([], [IDL.Nat], ['query']),
     'is_owner' : IDL.Func([], [IDL.Bool], ['query']),
-    'test' : IDL.Func([], [IDL.Text], []),
-    'test1' : IDL.Func([], [IDL.Text], []),
-    'test2' : IDL.Func([], [IDL.Text], []),
+    'test' : IDL.Func([], [Result], []),
     'transform' : IDL.Func(
         [TransformArgs],
         [CanisterHttpResponsePayload],

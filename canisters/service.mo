@@ -6,6 +6,7 @@ import Blob "mo:base/Blob";
 import Debug "mo:base/Debug";
 import Text "mo:base/Text";
 import Int "mo:base/Int";
+import Nat "mo:base/Nat";
 import Nat8 "mo:base/Nat8";
 import Nat64 "mo:base/Nat64";
 import Float "mo:base/Float";
@@ -26,6 +27,40 @@ module {
 
 
     public type Message = Text;
+
+    // public query func transform(raw : Http.IcHttp.TransformArgs) : async Http.IcHttp.CanisterHttpResponsePayload {
+    //   let transformed : Http.IcHttp.CanisterHttpResponsePayload = {
+    //         status = raw.response.status;
+    //         body = raw.response.body;
+    //         headers = [
+    //             {
+    //                 name = "Content-Security-Policy";
+    //                 value = "default-src 'self'";
+    //             },
+    //             { 
+    //                 name = "Referrer-Policy"; 
+    //                 value = "strict-origin" 
+    //             },
+    //             { 
+    //                 name = "Permissions-Policy"; 
+    //                 value = "geolocation=(self)" 
+    //             },
+    //             {
+    //                 name = "Strict-Transport-Security";
+    //                 value = "max-age=63072000";
+    //             },
+    //             { 
+    //                 name = "X-Frame-Options"; 
+    //                 value = "DENY" 
+    //             },
+    //             { 
+    //                 name = "X-Content-Type-Options"; 
+    //                 value = "nosniff" 
+    //             },
+    //         ];
+    //     };
+    //   transformed;
+    // };
 
     public module Stripe {
 
@@ -53,12 +88,14 @@ module {
         };
 
 
-        public func create_session(invoiceNo:Nat, invoice : Types.Request.CreateInvoiceBody) : async Result.Result<?CreateSession, ?Message>  {
+        // public func create_session(invoiceNo:Nat, invoice : Types.Request.CreateInvoiceBody, transform: shared query (Http.IcHttp.TransformArgs) -> async Http.IcHttp.CanisterHttpResponsePayload) : async Result.Result<?CreateSession, ?Message>  {
+        public func create_session(invoiceNo:Nat, invoice : Types.Request.CreateInvoiceBody, transform_context: Http.IcHttp.TransformContext) : async Result.Result<?CreateSession, ?Message>  {
             // Set the request headers
             let request_headers = [
                 {   name = "Content-Type";      value = "application/x-www-form-urlencoded" },
                 {   name = "Accept";            value = "application/json" },
                 {   name = "token";             value = api_token },
+                {   name = "invoice-number";    value = Nat.toText(invoiceNo)},
             ];
 
             // Construct the request body string
@@ -70,13 +107,20 @@ module {
             // Encode the request body as Blob
             let request_body_as_Blob: Blob = Text.encodeUtf8(request_body_str); 
 
+            // let transform_context : Http.IcHttp.TransformContext = {
+            //     function = transform;
+            //     context = Blob.fromArray([]);
+            // };
+
             // Create the HTTP request object
             let http_request : Http.IcHttp.HttpRequest = {
                 url = base_url # "stripe/create-session";
                 headers = request_headers;
                 body = ?request_body_as_Blob; 
                 method = #post;
-                ingress_expirey= ?Nat64.fromNat(60);
+                transform = ?transform_context;
+                max_response_bytes= null;
+                // ingress_expirey= ?Nat64.fromNat(60);
             };
 
             // Minimum cycles needed to pass the CI tests. Cycles needed will vary on many things, such as the size of the HTTP response and subnet.
@@ -114,7 +158,7 @@ module {
             };
         };
 
-        public func retrieve_session(session_id:Text) : async Result.Result<?RetrieveSession, ?Message>  {
+        public func retrieve_session(session_id:Text, transform_context: Http.IcHttp.TransformContext) : async Result.Result<?RetrieveSession, ?Message>  {
 
              // Set the request headers
             let request_headers = [
@@ -129,13 +173,21 @@ module {
             // Encode the request body as Blob
             let request_body_as_Blob: Blob = Text.encodeUtf8(request_body_str); 
 
+            // let transform_context : Http.IcHttp.TransformContext = {
+            //     function = transform;
+            //     context = Blob.fromArray([]);
+            // };
+
             // Create the HTTP request object
             let http_request : Http.IcHttp.HttpRequest = {
                 url = base_url # "stripe/retrieve-session/" # session_id;
                 headers = request_headers;
                 body = ?request_body_as_Blob; 
                 method = #post;
-                ingress_expirey= ?Nat64.fromNat(60);
+                transform = ?transform_context;
+                // transform = null;
+                max_response_bytes= null;
+                // ingress_expirey= ?Nat64.fromNat(60);
             };
 
             // Minimum cycles needed to pass the CI tests. Cycles needed will vary on many things, such as the size of the HTTP response and subnet.
@@ -199,7 +251,7 @@ module {
             status: Text;
         };
 
-        public func create_order(invoiceNo:Nat, invoice : Types.Request.CreateInvoiceBody): async Result.Result<?CreateOrder, ?Message> {
+        public func create_order(invoiceNo:Nat, invoice : Types.Request.CreateInvoiceBody, transform_context: Http.IcHttp.TransformContext): async Result.Result<?CreateOrder, ?Message> {
             
             let request_headers = [
                 {   name = "Content-Type";      value = "application/x-www-form-urlencoded" },
@@ -218,7 +270,10 @@ module {
                 headers = request_headers;
                 body = ?request_body_as_Blob; 
                 method = #post;
-                ingress_expirey= ?Nat64.fromNat(60);
+                transform = ?transform_context;
+                // transform = null;
+                max_response_bytes= null;
+                // ingress_expirey= ?Nat64.fromNat(60);
             };
 
             Cycles.add(220_131_200_000); 
@@ -257,7 +312,7 @@ module {
             };
         };   
 
-        public func retrieve_order(order_id:Text) : async Result.Result<?RetrieveOrder, ?Message>  {
+        public func retrieve_order(order_id:Text, transform_context: Http.IcHttp.TransformContext) : async Result.Result<?RetrieveOrder, ?Message>  {
 
             // Set the request headers
             let request_headers = [
@@ -276,7 +331,10 @@ module {
                 headers = request_headers;
                 body = ?request_body_as_Blob; 
                 method = #post;
-                ingress_expirey= ?Nat64.fromNat(60);
+                transform = ?transform_context;
+                // transform = null;
+                max_response_bytes= null;
+                // ingress_expirey= ?Nat64.fromNat(60);
             };
 
             // Minimum cycles needed to pass the CI tests. Cycles needed will vary on many things, such as the size of the HTTP response and subnet.

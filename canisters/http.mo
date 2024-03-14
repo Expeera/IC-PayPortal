@@ -17,7 +17,39 @@ module {
             url : Text;
             headers : [HttpHeader];
             body : ?Blob;
-            ingress_expirey: ?Nat64
+            // ingress_expirey: ?Nat64
+            max_response_bytes : ?Nat64;
+            transform : ?TransformRawResponseFunction;
+        };
+
+        public type TransformRawResponseFunction = {
+            function : shared query TransformArgs -> async HttpResponsePayload;
+            context : Blob;
+        };
+
+        public type TransformArgs = {
+            response : HttpResponsePayload;
+            context : Blob;
+        };
+
+        public type TransformContext = {
+            function : shared query TransformArgs -> async HttpResponsePayload;
+            context : Blob;
+        };
+
+        public type HttpResponsePayload = {
+            status : Nat;
+            headers : [HttpHeader];
+            body : [Nat8];
+            // body : CreateSessionApi;
+        };
+
+
+        public type CanisterHttpResponsePayload = {
+            status : Nat;
+            headers : [HttpHeader];
+            body : [Nat8];
+            // body : CreateSessionApi;
         };
 
         public type HttpMethod = {

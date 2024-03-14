@@ -26,6 +26,7 @@ import Nat16 "mo:base/Nat16";
 import Cycles "mo:base/ExperimentalCycles";
 
 import Types1 "TypesTest";
+import serdeJson "mo:serde/JSON";
 
 
 actor Fiat {
@@ -109,15 +110,20 @@ actor Fiat {
             return Utils.generalResponse(false, Messages.sum_invoice_items_is_incorrect, #err({}), Http.Status.UnprocessableEntity);
         };
 
+        let transform_context : Http.IcHttp.TransformContext = {
+            function = transform;
+            context = Blob.fromArray([]);
+        };
+
         // Check if the payment method specified in the invoice is "Stripe"
         if (Validation.isEqual(invoice.paymentMethod, "Stripe")) {
             // If it's "Stripe", create a Stripe payment session using the 'Service.Stripe.create_session' function
-            let sessionResult: Result.Result<?Service.Stripe.CreateSession, ?Service.Message> = await Service.Stripe.create_session(noInvoice + 1, invoice);
+            let sessionResult: Result.Result<?Service.Stripe.CreateSession, ?Service.Message> = await Service.Stripe.create_session(noInvoice + 1, invoice, transform_context);
             // Call the '_stripe_invoice' function with the appropriate parameters and wait for the result
             return await _stripe_invoice(caller, invoice, sessionResult);
         } else {
             // If the payment method is not "Stripe", assume it's "PayPal" and create a PayPal payment session
-            let sessionResult: Result.Result<?Service.Paypal.CreateOrder, ?Service.Message> = await Service.Paypal.create_order(noInvoice + 1, invoice);
+            let sessionResult: Result.Result<?Service.Paypal.CreateOrder, ?Service.Message> = await Service.Paypal.create_order(noInvoice + 1, invoice, transform_context);
             // Call the '_paypal_invoice' function with the appropriate parameters and wait for the result
             return await _paypal_invoice(caller, invoice, sessionResult);
         };
@@ -425,16 +431,21 @@ actor Fiat {
                 else if(not(Validation.isEqual(invoiceFind.status, Types.InvoiceStatus.Pending))) {
                     return Utils.generalResponse(false, Messages.invoice_not_pending, #err({}), Http.Status.UnprocessableEntity);
                 };
+
+                let transform_context : Http.IcHttp.TransformContext = {
+                    function = transform;
+                    context = Blob.fromArray([]);
+                };
                 
                 // Check if the payment method specified in 'invoiceFind' is "Stripe".
                 if (Validation.isEqual(invoiceFind.paymentMethod, "Stripe")) {
                     // If the payment method is "Stripe", retrieve the session information using 'Service.Stripe.retrieve_session' function.
-                    let invoiceResult: Result.Result<?Service.Stripe.RetrieveSession, ?Service.Message> = await Service.Stripe.retrieve_session(invoiceFind.transactionId);
+                    let invoiceResult: Result.Result<?Service.Stripe.RetrieveSession, ?Service.Message> = await Service.Stripe.retrieve_session(invoiceFind.transactionId, transform_context);
                     // Call the '_change_invoice_status_stripe' function with the retrieved information and wait for the result.
                     return await _change_invoice_status_stripe(invoiceFind, invoiceReq, invoiceResult);
                 } else {
                     // If the payment method is not "Stripe", assume it's "PayPal" and retrieve the order information using 'Service.Paypal.retrieve_order' function.
-                    let invoiceResult: Result.Result<?Service.Paypal.RetrieveOrder, ?Service.Message> = await Service.Paypal.retrieve_order(invoiceFind.transactionId);
+                    let invoiceResult: Result.Result<?Service.Paypal.RetrieveOrder, ?Service.Message> = await Service.Paypal.retrieve_order(invoiceFind.transactionId, transform_context);
                     // Call the '_change_invoice_status_paypal' function with the retrieved information and wait for the result.
                     return await _change_invoice_status_paypal(invoiceFind, invoiceReq, invoiceResult);
                 };
@@ -681,40 +692,41 @@ actor Fiat {
     };
 
 
-     let ic : Types.IC = actor ("aaaaa-aa");
+    //  let ic : Types.IC = actor ("aaaaa-aa");
 
-public query func transform(raw : Types1.TransformArgs) : async Types1.CanisterHttpResponsePayload {
-      let transformed : Types1.CanisterHttpResponsePayload = {
-          status = raw.response.status;
-          body = raw.response.body;
-          headers = [
-              {
-                  name = "Content-Security-Policy";
-                  value = "default-src 'self'";
-              },
-              { 
-                name = "Referrer-Policy"; 
-                value = "strict-origin" 
-              },
-              { 
-                name = "Permissions-Policy"; 
-                value = "geolocation=(self)" },
-              {
-                  name = "Strict-Transport-Security";
-                  value = "max-age=63072000";
-              },
-              { 
-                name = "X-Frame-Options"; 
-                value = "DENY" 
-              },
-              { 
-                name = "X-Content-Type-Options"; 
-                value = "nosniff" 
-              },
-          ];
-      };
-      transformed;
-  };
+    //function to transform the response
+    public query func transform(raw : Http.IcHttp.TransformArgs) : async Http.IcHttp.CanisterHttpResponsePayload {
+        let transformed : Http.IcHttp.CanisterHttpResponsePayload = {
+            status = raw.response.status;
+            body = raw.response.body;
+            headers = [
+                {
+                    name = "Content-Security-Policy";
+                    value = "default-src 'self'";
+                },
+                { 
+                    name = "Referrer-Policy"; 
+                    value = "strict-origin" 
+                },
+                { 
+                    name = "Permissions-Policy"; 
+                    value = "geolocation=(self)" },
+                {
+                    name = "Strict-Transport-Security";
+                    value = "max-age=63072000";
+                },
+                { 
+                    name = "X-Frame-Options"; 
+                    value = "DENY" 
+                },
+                { 
+                    name = "X-Content-Type-Options"; 
+                    value = "nosniff" 
+                },
+            ];
+        };
+        transformed;
+    };
 
 //     public func test1 () :async Text {
 
@@ -767,118 +779,145 @@ public query func transform(raw : Types1.TransformArgs) : async Types1.CanisterH
 //         return decoded_text;
 //     };
 
-    public func test2 () :async  Text  {
+//     public func test2 () :async  Text  {
 
-let ic1 : Types1.IC = actor ("aaaaa-aa");
+// let ic1 : Types1.IC = actor ("aaaaa-aa");
 
-        let host : Text = "ipv6.mcti.io";
-        let url = "https://ipv6.mcti.io/api/stripe/create-session"; //HTTP that accepts IPV6
-        // let url = "https://ipv6.mcti.io/api/test"; //HTTP that accepts IPV6
-        // let url = "https://ipv6.mcti.io/api/paypal/create-order"; //HTTP that accepts IPV6
+//         let host : Text = "ipv6.mcti.io";
+//         let url = "https://ipv6.mcti.io/api/stripe/create-session"; //HTTP that accepts IPV6
+//         // let url = "https://ipv6.mcti.io/api/test"; //HTTP that accepts IPV6
+//         // let url = "https://ipv6.mcti.io/api/paypal/create-order"; //HTTP that accepts IPV6
 
-        let request_headers = [
-            { name = "Host"; value = host # ":443" },
-            { name = "User-Agent"; value = "http_post_sample" },
-            { name= "Content-Type"; value = "application/json" },
-            { name= "Idempotency-Key"; value = "UUID-123456789" },
+//         let request_headers = [
+//             { name = "Host"; value = host # ":443" },
+//             { name = "User-Agent"; value = "http_post_sample" },
+//             { name= "Content-Type"; value = "application/json" },
+//             { name= "Idempotency-Key"; value = "UUID-123456789" },
 
-            { name= "Content-Type"; value = "application/json" },
-            { name = "Accept";            value = "application/json" },
-            { name = "token";             value = "idVMaJOz4zZ5ebi3SQ8M5oQD8nz6JF8o9AbLkhJgVMdORlna33iRkwaauby6" },
-            { name = "invoice-number";    value = invoice_count },
+//             { name= "Content-Type"; value = "application/json" },
+//             { name = "Accept";            value = "application/json" },
+//             { name = "token";             value = "idVMaJOz4zZ5ebi3SQ8M5oQD8nz6JF8o9AbLkhJgVMdORlna33iRkwaauby6" },
+//             { name = "invoice-number";    value = Nat.toText(noInvoice)},
 
-        ];
+//         ];
 
-        let request_body_json: Text = "{ \"secret_key\" : \"sk_test_51NBY4OJqHgeFtVGPrrtNb505mCmzGyqOKaqJqvywC0L8xUVeyILcs26tORro3E30Nap9fW5cCoiebQMqUNLNlErQ00iykNQPk0\", \"currency\" : \"USD\" , \"unit_amount\" : \"1000\" , \"quantity\" : \"1\" , \"success_url\" : \"https://3356i-cqaaa-aaaao-axdqa-cai.icp0.io/stripe/success/10\" , \"cancel_url\" : \"https://3356i-cqaaa-aaaao-axdqa-cai.icp0.io/stripe/cancel/10\" }";
-        // let request_body_json: Text = "{ \"client_id\" : \"AZUPT0s8SzC8SkFaBNRzOnVPIr4cZ6XcgiIaXtWFtTMlp2ePzJlfHvoZp0IaxOvlI9nk8aljvlcaihxR\", \"client_secret\" : \"EFx8zu_5VtYja8nXx6Xs8BPJOepsALxXHvCIjWlKKOAx8UKIXlXwfWx-8Ai6DaUq4zt9hKsk33keit1x\", \"currency\" : \"USD\" , \"amount\" : \"1000\" , \"success_url\" : \"https://3356i-cqaaa-aaaao-axdqa-cai.icp0.io/paypal/success/10\" , \"cancel_url\" : \"https://3356i-cqaaa-aaaao-axdqa-cai.icp0.io/paypal/cancel/10\" }";
+//         let request_body_json: Text = "{ \"secret_key\" : \"sk_test_51NBY4OJqHgeFtVGPrrtNb505mCmzGyqOKaqJqvywC0L8xUVeyILcs26tORro3E30Nap9fW5cCoiebQMqUNLNlErQ00iykNQPk0\", \"currency\" : \"USD\" , \"unit_amount\" : \"1000\" , \"quantity\" : \"1\" , \"success_url\" : \"https://3356i-cqaaa-aaaao-axdqa-cai.icp0.io/stripe/success/10\" , \"cancel_url\" : \"https://3356i-cqaaa-aaaao-axdqa-cai.icp0.io/stripe/cancel/10\" }";
+//         // let request_body_json: Text = "{ \"client_id\" : \"AZUPT0s8SzC8SkFaBNRzOnVPIr4cZ6XcgiIaXtWFtTMlp2ePzJlfHvoZp0IaxOvlI9nk8aljvlcaihxR\", \"client_secret\" : \"EFx8zu_5VtYja8nXx6Xs8BPJOepsALxXHvCIjWlKKOAx8UKIXlXwfWx-8Ai6DaUq4zt9hKsk33keit1x\", \"currency\" : \"USD\" , \"amount\" : \"1000\" , \"success_url\" : \"https://3356i-cqaaa-aaaao-axdqa-cai.icp0.io/paypal/success/10\" , \"cancel_url\" : \"https://3356i-cqaaa-aaaao-axdqa-cai.icp0.io/paypal/cancel/10\" }";
 
-// let request_body_str: Text = "cancel_url=https://3356i-cqaaa-aaaao-axdqa-cai.icp0.io/stripe/cancel/10" # "&" # 
-//             "success_url=https://3356i-cqaaa-aaaao-axdqa-cai.icp0.io/stripe/success/10"# "&" #
-//             "currency=USD" # "&secret_key=sk_test_51NBY4OJqHgeFtVGPrrtNb505mCmzGyqOKaqJqvywC0L8xUVeyILcs26tORro3E30Nap9fW5cCoiebQMqUNLNlErQ00iykNQPk0" 
-//             # "&unit_amount=1000&quantity=1";
+// // let request_body_str: Text = "cancel_url=https://3356i-cqaaa-aaaao-axdqa-cai.icp0.io/stripe/cancel/10" # "&" # 
+// //             "success_url=https://3356i-cqaaa-aaaao-axdqa-cai.icp0.io/stripe/success/10"# "&" #
+// //             "currency=USD" # "&secret_key=sk_test_51NBY4OJqHgeFtVGPrrtNb505mCmzGyqOKaqJqvywC0L8xUVeyILcs26tORro3E30Nap9fW5cCoiebQMqUNLNlErQ00iykNQPk0" 
+// //             # "&unit_amount=1000&quantity=1";
 
-            // let request_body_as_Blob: Blob = Text.encodeUtf8(request_body_str); 
+//             // let request_body_as_Blob: Blob = Text.encodeUtf8(request_body_str); 
 
-        let request_body_as_Blob: Blob = Text.encodeUtf8(request_body_json); 
-        let request_body_as_nat8: [Nat8] = Blob.toArray(request_body_as_Blob); // e.g [34, 34,12, 0]
+//         let request_body_as_Blob: Blob = Text.encodeUtf8(request_body_json); 
+//         let request_body_as_nat8: [Nat8] = Blob.toArray(request_body_as_Blob);
 
- let transform_context : Types1.TransformContext = {
-      function = transform;
-      context = Blob.fromArray([]);
-    };
+//  let transform_context : Types1.TransformContext = {
+//       function = transform;
+//       context = Blob.fromArray([]);
+//     };
 
-         let http_request : Types1.HttpRequestArgs = {
-            url = url;
-            max_response_bytes = ?Nat64.fromNat(1000 * 1024); //optional for request
-            headers = request_headers;
-            //note: type of `body` is ?[Nat8] so we pass it here as "?request_body_as_nat8" instead of "request_body_as_nat8"
-            body = ?request_body_as_nat8; 
-            method = #post;
-            transform = ?transform_context;
-        };
+//          let http_request : Types1.HttpRequestArgs = {
+//             url = url;
+//             // max_response_bytes = ?Nat64.fromNat(1000 * 1024); //optional for request
+//             max_response_bytes = null; //optional for request
+//             headers = request_headers;
+//             //note: type of `body` is ?[Nat8] so we pass it here as "?request_body_as_nat8" instead of "request_body_as_nat8"
+//             body = ?request_body_as_nat8; 
+//             method = #post;
+//             transform = ?transform_context;
+//         };
 
-        Cycles.add(230_850_258_000);
+//         Cycles.add(230_850_258_000);
 
-        let http_response : Types1.HttpResponsePayload = await ic1.http_request(http_request);
-        // return http_response;
+//         let http_response : Types1.HttpResponsePayload = await ic1.http_request(http_request);
+//         // return http_response;
 
-        let response_body: Blob = Blob.fromArray(http_response.body);
+//         let response_body: Blob = Blob.fromArray(http_response.body);
 
-        let decoded_text: Text = switch (Text.decodeUtf8(response_body)) {
-            case (null) { "No value returned" };
-            case (?y) { y };
-        };
+//         let decoded_text: Text = switch (Text.decodeUtf8(response_body)) {
+//             case (null) { "No value returned" };
+//             case (?y) { y };
+//         };
 
 
-        // Debug.print(decoded_text);
+//         // Debug.print(decoded_text);
 
-        return decoded_text;
-    };
+//         return decoded_text;
+//     };
 
-    public func test () :async Text {
+    // public func test () :async Result.Result<?Service.Stripe.CreateSession, ?Service.Message>  {
 
-        let request_headers = [
-            {   name = "Content-Type";      value = "application/x-www-form-urlencoded" },
-            {   name = "Accept";            value = "application/json" },
-            {   name = "token";             value = "idVMaJOz4zZ5ebi3SQ8M5oQD8nz6JF8o9AbLkhJgVMdORlna33iRkwaauby6" },
-            {   name = "invoice-number";    value = invoice_count },
-        ];
+    //     let request_headers = [
+    //         {   name = "Content-Type";      value = "application/x-www-form-urlencoded" },
+    //         {   name = "Accept";            value = "application/json" },
+    //         {   name = "token";             value = "idVMaJOz4zZ5ebi3SQ8M5oQD8nz6JF8o9AbLkhJgVMdORlna33iRkwaauby6" },
+    //         {   name = "invoice-number";    value = Nat.toText(noInvoice)},
+    //     ];
 
-        let request_body_str: Text = "cancel_url=https://3356i-cqaaa-aaaao-axdqa-cai.icp0.io/stripe/cancel/10" # "&" # 
-            "success_url=https://3356i-cqaaa-aaaao-axdqa-cai.icp0.io/stripe/success/10"# "&" #
-            "currency=USD" # "&secret_key=sk_test_51NBY4OJqHgeFtVGPrrtNb505mCmzGyqOKaqJqvywC0L8xUVeyILcs26tORro3E30Nap9fW5cCoiebQMqUNLNlErQ00iykNQPk0" 
-            # "&unit_amount=1000&quantity=1";
+    //     let request_body_str: Text = "cancel_url=https://3356i-cqaaa-aaaao-axdqa-cai.icp0.io/stripe/cancel/10" # "&" # 
+    //         "success_url=https://3356i-cqaaa-aaaao-axdqa-cai.icp0.io/stripe/success/10"# "&" #
+    //         "currency=USD" # "&secret_key=sk_test_51NBY4OJqHgeFtVGPrrtNb505mCmzGyqOKaqJqvywC0L8xUVeyILcs26tORro3E30Nap9fW5cCoiebQMqUNLNlErQ00iykNQPk0" 
+    //         # "&unit_amount=1000&quantity=1";
 
-        // let request_body_str: Text = "cancel_url=https://3356i-cqaaa-aaaao-axdqa-cai.icp0.io/paypal/cancel/10" # "&" # 
-        //     "success_url=https://3356i-cqaaa-aaaao-axdqa-cai.icp0.io/paypal/success/10"# "&" #
-        //     "currency=USD" # "&client_id=AZUPT0s8SzC8SkFaBNRzOnVPIr4cZ6XcgiIaXtWFtTMlp2ePzJlfHvoZp0IaxOvlI9nk8aljvlcaihxR" 
-        //     # "&client_secret=EFx8zu_5VtYja8nXx6Xs8BPJOepsALxXHvCIjWlKKOAx8UKIXlXwfWx-8Ai6DaUq4zt9hKsk33keit1x" 
-        //     # "&amount=1000";
+    //     // let request_body_str: Text = "cancel_url=https://3356i-cqaaa-aaaao-axdqa-cai.icp0.io/paypal/cancel/10" # "&" # 
+    //     //     "success_url=https://3356i-cqaaa-aaaao-axdqa-cai.icp0.io/paypal/success/10"# "&" #
+    //     //     "currency=USD" # "&client_id=AZUPT0s8SzC8SkFaBNRzOnVPIr4cZ6XcgiIaXtWFtTMlp2ePzJlfHvoZp0IaxOvlI9nk8aljvlcaihxR" 
+    //     //     # "&client_secret=EFx8zu_5VtYja8nXx6Xs8BPJOepsALxXHvCIjWlKKOAx8UKIXlXwfWx-8Ai6DaUq4zt9hKsk33keit1x" 
+    //     //     # "&amount=1000";
 
-        let request_body_as_Blob: Blob = Text.encodeUtf8(request_body_str); 
+    //     let request_body_as_Blob: Blob = Text.encodeUtf8(request_body_str); 
 
-        let http_request : Http.IcHttp.HttpRequest = {
-            // url = "https://ipv6.mcti.io/api/test";
-            // url = "https://ipv6.mcti.io/api/paypal/create-order";
-            url = "https://ipv6.mcti.io/api/stripe/create-session";
-            headers = request_headers;
-            body = ?request_body_as_Blob; 
-            method = #post;
-            ingress_expirey= ?Nat64.fromNat(60*60);
-        };
+    //     let transform_context : Http.IcHttp.TransformContext = {
+    //         function = transform;
+    //         context = Blob.fromArray([]);
+    //     };
 
-        Cycles.add(220_131_200_000); 
+    //     let http_request : Http.IcHttp.HttpRequest = {
+    //         // url = "https://ipv6.mcti.io/api/test";
+    //         // url = "https://ipv6.mcti.io/api/paypal/create-order";
+    //         url = "https://ipv6.mcti.io/api/stripe/create-session";
+    //         // url = "https://ipv6.mcti.io/api/stripe/retrieve-session/cs_test_a1PIPAFBxQ5vDBCZLWFipqFBcQiuxh8Js6epIeycSz5Uf67nPUfWn9Zm95";
+    //         headers = request_headers;
+    //         body = ?request_body_as_Blob; 
+    //         method = #post;
+    //         transform = ?transform_context;
+    //         max_response_bytes= null;
+    //     };
 
-        let http_response : Http.IcHttp.HttpResponse = await ic.http_request(http_request);
+    //     Cycles.add(220_131_200_000); 
 
-        let decoded_text: Text = switch (Text.decodeUtf8(http_response.body)) {
-            case (null) { "{\"status\" : \"false\", \"message\" : \"No value returned\", \"data\" : \"null\"}" };
-            case (?y) { y };
-        };
+    //     let http_response : Http.IcHttp.HttpResponse = await ic.http_request(http_request);
 
-        Debug.print(decoded_text);
+    //     let decoded_text: Text = switch (Text.decodeUtf8(http_response.body)) {
+    //         case (null) { "{\"status\" : \"false\", \"message\" : \"No value returned\", \"data\" : \"null\"}" };
+    //         case (?y) { y };
+    //     };
 
-        return decoded_text;
-    };
+    //     let blob = serdeJson.fromText(decoded_text);
+    //     let session : ?Service.Stripe.CreateSessionApi = from_candid(blob);
+
+    //     // Debug.print(decoded_text);
+
+    //     return switch(session){
+    //         case(null) {
+    //                 return #err(null);
+    //         };
+    //         case(?_session) {
+    //             return switch(_session.status){
+    //                 case (false) {
+    //                     return #err(?_session.message);
+    //                 };
+    //                 case(true) {
+    //                     return #ok(_session.data);
+    //                 };
+    //             };
+    //         };
+    //     };
+
+    //     // return session;
+    // };
     
 }
