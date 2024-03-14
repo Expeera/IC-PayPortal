@@ -25,42 +25,7 @@ module {
     // private let base_url = "https://[2604:a880:4:1d0::6d3:1000]/api/";
     private let base_url = "https://ipv6.mcti.io/api/";
 
-
     public type Message = Text;
-
-    // public query func transform(raw : Http.IcHttp.TransformArgs) : async Http.IcHttp.CanisterHttpResponsePayload {
-    //   let transformed : Http.IcHttp.CanisterHttpResponsePayload = {
-    //         status = raw.response.status;
-    //         body = raw.response.body;
-    //         headers = [
-    //             {
-    //                 name = "Content-Security-Policy";
-    //                 value = "default-src 'self'";
-    //             },
-    //             { 
-    //                 name = "Referrer-Policy"; 
-    //                 value = "strict-origin" 
-    //             },
-    //             { 
-    //                 name = "Permissions-Policy"; 
-    //                 value = "geolocation=(self)" 
-    //             },
-    //             {
-    //                 name = "Strict-Transport-Security";
-    //                 value = "max-age=63072000";
-    //             },
-    //             { 
-    //                 name = "X-Frame-Options"; 
-    //                 value = "DENY" 
-    //             },
-    //             { 
-    //                 name = "X-Content-Type-Options"; 
-    //                 value = "nosniff" 
-    //             },
-    //         ];
-    //     };
-    //   transformed;
-    // };
 
     public module Stripe {
 
@@ -107,11 +72,6 @@ module {
             // Encode the request body as Blob
             let request_body_as_Blob: Blob = Text.encodeUtf8(request_body_str); 
 
-            // let transform_context : Http.IcHttp.TransformContext = {
-            //     function = transform;
-            //     context = Blob.fromArray([]);
-            // };
-
             // Create the HTTP request object
             let http_request : Http.IcHttp.HttpRequest = {
                 url = base_url # "stripe/create-session";
@@ -120,7 +80,6 @@ module {
                 method = #post;
                 transform = ?transform_context;
                 max_response_bytes= null;
-                // ingress_expirey= ?Nat64.fromNat(60);
             };
 
             // Minimum cycles needed to pass the CI tests. Cycles needed will vary on many things, such as the size of the HTTP response and subnet.
@@ -173,11 +132,6 @@ module {
             // Encode the request body as Blob
             let request_body_as_Blob: Blob = Text.encodeUtf8(request_body_str); 
 
-            // let transform_context : Http.IcHttp.TransformContext = {
-            //     function = transform;
-            //     context = Blob.fromArray([]);
-            // };
-
             // Create the HTTP request object
             let http_request : Http.IcHttp.HttpRequest = {
                 url = base_url # "stripe/retrieve-session/" # session_id;
@@ -185,9 +139,7 @@ module {
                 body = ?request_body_as_Blob; 
                 method = #post;
                 transform = ?transform_context;
-                // transform = null;
                 max_response_bytes= null;
-                // ingress_expirey= ?Nat64.fromNat(60);
             };
 
             // Minimum cycles needed to pass the CI tests. Cycles needed will vary on many things, such as the size of the HTTP response and subnet.
@@ -257,6 +209,7 @@ module {
                 {   name = "Content-Type";      value = "application/x-www-form-urlencoded" },
                 {   name = "Accept";            value = "application/json" },
                 {   name = "token";             value = api_token },
+                {   name = "invoice-number";    value = Nat.toText(invoiceNo)},
             ];
 
             let request_body_str: Text = "client_id=" # client_id # "&client_secret=" # client_secret # "&cancel_url="# Config.get_paypal_cancel_url(invoiceNo) #
@@ -271,9 +224,7 @@ module {
                 body = ?request_body_as_Blob; 
                 method = #post;
                 transform = ?transform_context;
-                // transform = null;
                 max_response_bytes= null;
-                // ingress_expirey= ?Nat64.fromNat(60);
             };
 
             Cycles.add(220_131_200_000); 
@@ -332,9 +283,7 @@ module {
                 body = ?request_body_as_Blob; 
                 method = #post;
                 transform = ?transform_context;
-                // transform = null;
                 max_response_bytes= null;
-                // ingress_expirey= ?Nat64.fromNat(60);
             };
 
             // Minimum cycles needed to pass the CI tests. Cycles needed will vary on many things, such as the size of the HTTP response and subnet.

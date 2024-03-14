@@ -17,7 +17,6 @@ module {
             url : Text;
             headers : [HttpHeader];
             body : ?Blob;
-            // ingress_expirey: ?Nat64
             max_response_bytes : ?Nat64;
             transform : ?TransformRawResponseFunction;
         };
@@ -41,7 +40,6 @@ module {
             status : Nat;
             headers : [HttpHeader];
             body : [Nat8];
-            // body : CreateSessionApi;
         };
 
 
@@ -49,7 +47,6 @@ module {
             status : Nat;
             headers : [HttpHeader];
             body : [Nat8];
-            // body : CreateSessionApi;
         };
 
         public type HttpMethod = {
