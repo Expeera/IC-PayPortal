@@ -45,7 +45,7 @@ actor Fiat {
     private stable var pendingInvoiceList: List.List<Nat> = List.nil<Nat>();
 
     // Owner's identifier
-    private var owner:Text = "4m33l-au6pl-u6xiu-uf6t3-pmkhv-qev4s-v4khz-gvwxf-tc4uw-ia56g-lqe";
+    private var owner:Text = "aungm-5m6dm-vjzon-2s7yq-u5kqw-mwdge-w3ixa-bsfm7-byb7u-pih3y-iae";
 
     // Owner's identifier
     public func getOwner() : async Text {
