@@ -119,30 +119,6 @@ export default function Form() {
     toast.success(`${product.name} added successfully.`)
   }
 
-  // const removeFromCart = (productId) => {
-  //   const updatedCart = { ...cart }
-
-  //   const existingProductIndex = updatedCart.products.findIndex(
-  //     (item) => item.id === productId,
-  //   )
-  //   if (existingProductIndex !== -1) {
-  //     const removedProduct = updatedCart.products[existingProductIndex]
-  //     updatedCart.products.splice(existingProductIndex, 1)
-  //     updatedCart.totalPrice = (
-  //       parseFloat(updatedCart.totalPrice) -
-  //       parseFloat(removedProduct.totalPrice)
-  //     ).toFixed(2)
-
-  //     setCart(updatedCart)
-
-  //     toast.success(
-  //       `Product with ID ${productId} has been removed from the cart.`,
-  //     )
-  //   } else {
-  //     toast.error(`Product with ID ${productId} does not exist in the cart.`)
-  //   }
-  // }
-
   const decreaseQuantityInCart = (productId) => {
     const updatedCart = { ...cart }
 
@@ -167,29 +143,6 @@ export default function Form() {
       )
     }
   }
-
-  // const increaseQuantityInCart = (productId) => {
-  //   const updatedCart = { ...cart }
-
-  //   const existingProduct = updatedCart.products.find(
-  //     (item) => item.id === productId,
-  //   )
-  //   if (existingProduct) {
-  //     existingProduct.quantity++
-  //     existingProduct.totalPrice = (
-  //       existingProduct.price * existingProduct.quantity
-  //     ).toFixed(2)
-  //     updatedCart.totalPrice = (
-  //       parseFloat(updatedCart.totalPrice) + parseFloat(existingProduct.price)
-  //     ).toFixed(2)
-
-  //     setCart(updatedCart)
-
-  //     toast.success(`Quantity of Product with ID ${productId} increased by 1.`)
-  //   } else {
-  //     toast.error(`Product with ID ${productId} does not exist in the cart.`)
-  //   }
-  // }
 
   const getQuantityInCart = (productId) => {
     const product = cart.products.find((item) => item.id === productId)
@@ -263,18 +216,9 @@ export default function Form() {
     isAuthenticated && actor && myInvoice()
   }, [isAuthenticated, actor])
 
-  // const handleClickLogout = () => {
-  //   logout()
-  //   navigate("/auth/login")
-  // }
-
   if (!isAuthenticated) {
     navigate("/auth/login")
   }
-
-  // useEffect(() => {
-  //   console.log(cart)
-  // }, [cart])
 
   return (
     <>
@@ -370,41 +314,6 @@ export default function Form() {
                         >
                           Remove From Cart
                         </button>
-                        {/* <div className="d-flex justify-content-center">
-                          
-                           <button
-                          onClick={(e) => removeFromCart(product.id)}
-                          style={{
-                            padding: "8px 12px",
-                            backgroundColor: "#dc3545",
-                            color: "#fff",
-                            border: "none",
-                            cursor: "pointer",
-                            background: "#dc3545",
-                            borderRadius: "8px",
-                            fontSize: "14px",
-                            margin: "5px",
-                          }}
-                        >
-                          -
-                        </button>
-                          <button
-                            onClick={(e) => increaseQuantityInCart(product.id)}
-                            style={{
-                              padding: "8px 12px",
-                              backgroundColor: "#28a745",
-                              color: "#fff",
-                              border: "none",
-                              cursor: "pointer",
-                              background: "#28a745",
-                              borderRadius: "8px",
-                              fontSize: "14px",
-                              margin: "5px",
-                            }}
-                          >
-                            +
-                          </button>
-                        </div> */}
                       </div>
                     </div>
                   </Col>
@@ -419,7 +328,6 @@ export default function Form() {
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
-                // height: "700px",
                 justifyContent: "center",
                 width: "100%",
               }}
@@ -501,161 +409,6 @@ export default function Form() {
             </div>
           </Col>
         </Row>
-        {/* <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-
-            // height: "700px",
-            justifyContent: "center",
-            width: "100%",
-          }}
-        >
-          <div
-            style={{
-              margin: "5px 30px",
-              textAlign: "center",
-              justifyContent: "center",
-              display: "flex",
-              flexWrap: "wrap",
-            }}
-          >
-            {products.map((product) => (
-              <div
-                style={{
-                  width: "25%",
-                  padding: "10px",
-                  margin: "10px",
-                  background: "#fff",
-                  borderRadius: "8px",
-                  boxShadow:
-                    "rgba(17, 17, 26, 0.05) 0px 1px 0px, rgba(17, 17, 26, 0.1) 0px 0px 8px",
-                }}
-              >
-                <h2>{product.name}</h2>
-                <p style={{ fontWeight: 600 }}>
-                  {product.price} {currency}
-                </p>
-                <button
-                  onClick={(e) => addToCart(product)}
-                  style={{
-                    padding: "15px 20px",
-                    backgroundColor: "#28a745",
-                    color: "#fff",
-                    border: "none",
-                    cursor: "pointer",
-                    background: "#28a745",
-                    borderRadius: "8px",
-                    fontSize: "18px",
-                  }}
-                >
-                  Add To Cart
-                </button>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            // height: "700px",
-            justifyContent: "center",
-            width: "100%",
-          }}
-        >
-          <h2>Create New Invoice</h2>
-          <form
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              width: "50%",
-              padding: "10px",
-            }}
-          >
-            <select
-              name="paymentMethod"
-              value={formData.paymentMethod}
-              onChange={handleChange}
-              style={{
-                marginBottom: "10px",
-                padding: "5px 10px",
-                width: "100%",
-                height: "50px",
-                borderRadius: "8px",
-              }}
-            >
-              <option value="default">Select payment method</option>
-              <option value="stripe">Stripe</option>
-              <option value="paypal">PayPal</option>
-            </select>
-            <input
-              type="number"
-              name="amount"
-              value={formData.amount}
-              onChange={handleChange}
-              placeholder="Amount"
-              disabled
-              style={{
-                marginBottom: "10px",
-                padding: "5px 2px",
-                width: "100%",
-                height: "50px",
-                borderRadius: "8px",
-                border: "1px solid #888",
-              }}
-            />
-            <select
-              name="currency"
-              value={formData.currency}
-              onChange={handleChange}
-              style={{
-                marginBottom: "10px",
-                padding: "5px 10px",
-                width: "100%",
-                height: "50px",
-                borderRadius: "8px",
-              }}
-            >
-              <option value="USD">USD</option>
-              <option value="EUR">EUR</option>
-            </select>
-            <button
-              type="submit"
-              style={{
-                padding: "15px 20px",
-                backgroundColor: "#007bff",
-                color: "#fff",
-                border: "none",
-                cursor: "pointer",
-                background: "#007bff",
-                borderRadius: "8px",
-                fontSize: "18px",
-              }}
-              onClick={handleSubmit}
-            >
-              Submit
-            </button>
-          </form>
-          <button
-            onClick={handleClickLogout}
-            style={{
-              padding: "15px 20px",
-              backgroundColor: "#dc3545",
-              color: "#fff",
-              border: "none",
-              cursor: "pointer",
-              borderRadius: "8px",
-              fontSize: "18px",
-            }}
-          >
-            Logout
-          </button>
-        </div> */}
       </div>
     </>
   )
