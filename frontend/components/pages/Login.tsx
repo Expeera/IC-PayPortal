@@ -19,7 +19,7 @@ export const Login = () => {
     login: connect,
     isAuthenticated,
     loading,
-    loadingUser,
+    // loadingUser,
   } = useContext(AppContext)
   console.log({
     isAuthenticated,

@@ -119,29 +119,29 @@ export default function Form() {
     toast.success(`${product.name} added successfully.`)
   }
 
-  const removeFromCart = (productId) => {
-    const updatedCart = { ...cart }
+  // const removeFromCart = (productId) => {
+  //   const updatedCart = { ...cart }
 
-    const existingProductIndex = updatedCart.products.findIndex(
-      (item) => item.id === productId,
-    )
-    if (existingProductIndex !== -1) {
-      const removedProduct = updatedCart.products[existingProductIndex]
-      updatedCart.products.splice(existingProductIndex, 1)
-      updatedCart.totalPrice = (
-        parseFloat(updatedCart.totalPrice) -
-        parseFloat(removedProduct.totalPrice)
-      ).toFixed(2)
+  //   const existingProductIndex = updatedCart.products.findIndex(
+  //     (item) => item.id === productId,
+  //   )
+  //   if (existingProductIndex !== -1) {
+  //     const removedProduct = updatedCart.products[existingProductIndex]
+  //     updatedCart.products.splice(existingProductIndex, 1)
+  //     updatedCart.totalPrice = (
+  //       parseFloat(updatedCart.totalPrice) -
+  //       parseFloat(removedProduct.totalPrice)
+  //     ).toFixed(2)
 
-      setCart(updatedCart)
+  //     setCart(updatedCart)
 
-      toast.success(
-        `Product with ID ${productId} has been removed from the cart.`,
-      )
-    } else {
-      toast.error(`Product with ID ${productId} does not exist in the cart.`)
-    }
-  }
+  //     toast.success(
+  //       `Product with ID ${productId} has been removed from the cart.`,
+  //     )
+  //   } else {
+  //     toast.error(`Product with ID ${productId} does not exist in the cart.`)
+  //   }
+  // }
 
   const decreaseQuantityInCart = (productId) => {
     const updatedCart = { ...cart }
@@ -168,28 +168,28 @@ export default function Form() {
     }
   }
 
-  const increaseQuantityInCart = (productId) => {
-    const updatedCart = { ...cart }
+  // const increaseQuantityInCart = (productId) => {
+  //   const updatedCart = { ...cart }
 
-    const existingProduct = updatedCart.products.find(
-      (item) => item.id === productId,
-    )
-    if (existingProduct) {
-      existingProduct.quantity++
-      existingProduct.totalPrice = (
-        existingProduct.price * existingProduct.quantity
-      ).toFixed(2)
-      updatedCart.totalPrice = (
-        parseFloat(updatedCart.totalPrice) + parseFloat(existingProduct.price)
-      ).toFixed(2)
+  //   const existingProduct = updatedCart.products.find(
+  //     (item) => item.id === productId,
+  //   )
+  //   if (existingProduct) {
+  //     existingProduct.quantity++
+  //     existingProduct.totalPrice = (
+  //       existingProduct.price * existingProduct.quantity
+  //     ).toFixed(2)
+  //     updatedCart.totalPrice = (
+  //       parseFloat(updatedCart.totalPrice) + parseFloat(existingProduct.price)
+  //     ).toFixed(2)
 
-      setCart(updatedCart)
+  //     setCart(updatedCart)
 
-      toast.success(`Quantity of Product with ID ${productId} increased by 1.`)
-    } else {
-      toast.error(`Product with ID ${productId} does not exist in the cart.`)
-    }
-  }
+  //     toast.success(`Quantity of Product with ID ${productId} increased by 1.`)
+  //   } else {
+  //     toast.error(`Product with ID ${productId} does not exist in the cart.`)
+  //   }
+  // }
 
   const getQuantityInCart = (productId) => {
     const product = cart.products.find((item) => item.id === productId)
@@ -213,7 +213,7 @@ export default function Form() {
 
     var amount = 0
     var carts = cart.products.map((item) => {
-      amount += (parseFloat(item.price) * item.quantity)
+      amount += parseFloat(item.price) * item.quantity
       return {
         id: parseInt(item.id),
         name: item.name,
@@ -263,18 +263,18 @@ export default function Form() {
     isAuthenticated && actor && myInvoice()
   }, [isAuthenticated, actor])
 
-  const handleClickLogout = () => {
-    logout()
-    navigate("/auth/login")
-  }
+  // const handleClickLogout = () => {
+  //   logout()
+  //   navigate("/auth/login")
+  // }
 
   if (!isAuthenticated) {
     navigate("/auth/login")
   }
 
-  useEffect(() => {
-    console.log(cart)
-  }, [cart])
+  // useEffect(() => {
+  //   console.log(cart)
+  // }, [cart])
 
   return (
     <>
@@ -310,12 +310,15 @@ export default function Form() {
                           "rgba(17, 17, 26, 0.05) 0px 1px 0px, rgba(17, 17, 26, 0.1) 0px 0px 8px",
                       }}
                     >
-                      <img src={product.image} style={{
-                        width: "100%",
-                        height: "204px",
-                        objectFit: "contain",
-                        padding: "20px 10px",
-                      }} />
+                      <img
+                        src={product.image}
+                        style={{
+                          width: "100%",
+                          height: "204px",
+                          objectFit: "contain",
+                          padding: "20px 10px",
+                        }}
+                      />
                       <h2
                         style={{
                           marginTop: "5px",

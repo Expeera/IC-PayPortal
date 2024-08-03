@@ -8,7 +8,7 @@ import {
   Route,
   Router,
   Routes,
-  useNavigate,
+  // useNavigate,
 } from "react-router-dom"
 import { Showcase } from "./components/showcase"
 import { DefaultLayout } from "./components/Layouts/Default"
@@ -17,10 +17,8 @@ import { Authenticated } from "./Guards/Authenticated"
 import { Login } from "./components/pages/Login"
 import "react-toastify/dist/ReactToastify.css"
 import { AuthClient } from "@dfinity/auth-client"
-import { useAuthClient, Invoice } from "./Hooks/UseAuthClient"
-
+import { useAuthClient } from "./Hooks/UseAuthClient"
 import { ActorSubclass } from "@dfinity/agent"
-import { UsersManagement } from "./components/pages/UsersManagement"
 import { _SERVICE } from "./declarations/fiat/fiat.did"
 import Form from "./components/pages/Form"
 import Success from "./components/pages/Success"
@@ -38,10 +36,10 @@ interface AppStateInterface {
   login: () => void
   logout: () => void
   actor: ActorSubclass<_SERVICE>
-  hasLoggedIn: boolean
+  // hasLoggedIn: boolean
   isOwner?: () => boolean | Promise<boolean>
-  loadingUser: boolean
-  balance: string
+  // loadingUser: boolean
+  // balance: string
 }
 const INITIAL_APP_STATE = {
   isAuthenticated: false,
@@ -49,14 +47,14 @@ const INITIAL_APP_STATE = {
   user: null,
   login: () => {},
   logout: () => {},
-  hasLoggedIn: false,
+  // hasLoggedIn: false,
   isOwner: async () => {
     return false
   },
   nftActor: undefined,
   ledgerActor: undefined,
-  loadingUser: true,
-  balance: "0.0",
+  // loadingUser: true,
+  // balance: "0.0",
 }
 export const AppContext =
   React.createContext<AppStateInterface>(INITIAL_APP_STATE)
@@ -74,9 +72,9 @@ function App() {
     actor,
     loading,
     isOwner,
-    hasLoggedIn,
-    balance,
-    loadingUser,
+    // hasLoggedIn,
+    // balance,
+    // loadingUser,
   } = useAuthClient()
 
   return (
@@ -91,9 +89,9 @@ function App() {
         logout,
         isOwner,
         actor,
-        hasLoggedIn,
-        balance,
-        loadingUser,
+        // hasLoggedIn,
+        // balance,
+        // loadingUser,
       }}
     >
       {/*
@@ -112,14 +110,8 @@ function App() {
                 element={!isAuthenticated ? <Login /> : <DefaultLayout />}
               ></Route>
             </Route>
-            <Route
-              path="stripe/success/:invoiceNo"
-              element={<Success />}
-            />
-            <Route
-              path="stripe/cancel/:invoiceNo"
-              element={<Cancel />}
-            />
+            <Route path="stripe/success/:invoiceNo" element={<Success />} />
+            <Route path="stripe/cancel/:invoiceNo" element={<Cancel />} />
 
             <Route path="paypal/success/:invoiceNo" element={<Success />} />
             <Route path="paypal/cancel/:invoiceNo" element={<Cancel />} />
