@@ -56,7 +56,7 @@ export default function Form() {
     },
     {
       id: 3,
-      name: "Product 3",
+      name: "Product 10000",
       price: (10 + Math.random() * 190).toFixed(2),
       image: product3,
     },
