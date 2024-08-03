@@ -1,16 +1,8 @@
-import React from "react"
-
 /*
  * Import canister definitions like this:
  */
-import {
-  BrowserRouter,
-  Route,
-  Router,
-  Routes,
-  // useNavigate,
-} from "react-router-dom"
-import { Showcase } from "./components/showcase"
+import React from "react"
+import { BrowserRouter, Route, Routes } from "react-router-dom"
 import { DefaultLayout } from "./components/Layouts/Default"
 import { ToastContainer } from "react-toastify"
 import { Authenticated } from "./Guards/Authenticated"
@@ -36,10 +28,7 @@ interface AppStateInterface {
   login: () => void
   logout: () => void
   actor: ActorSubclass<_SERVICE>
-  // hasLoggedIn: boolean
   isOwner?: () => boolean | Promise<boolean>
-  // loadingUser: boolean
-  // balance: string
 }
 const INITIAL_APP_STATE = {
   isAuthenticated: false,
@@ -47,14 +36,11 @@ const INITIAL_APP_STATE = {
   user: null,
   login: () => {},
   logout: () => {},
-  // hasLoggedIn: false,
   isOwner: async () => {
     return false
   },
   nftActor: undefined,
   ledgerActor: undefined,
-  // loadingUser: true,
-  // balance: "0.0",
 }
 export const AppContext =
   React.createContext<AppStateInterface>(INITIAL_APP_STATE)
@@ -72,9 +58,6 @@ function App() {
     actor,
     loading,
     isOwner,
-    // hasLoggedIn,
-    // balance,
-    // loadingUser,
   } = useAuthClient()
 
   return (
@@ -89,17 +72,8 @@ function App() {
         logout,
         isOwner,
         actor,
-        // hasLoggedIn,
-        // balance,
-        // loadingUser,
       }}
     >
-      {/*
-      radial-gradient(circle at 50% 100%,#d7cdeb,#fff)
-
-// radial-gradient(circle at 50% 100%,#d7cdeb,fff)
-      radial-gradient(circle at 50% 100%,#d7cdeb,fff)
-      */}
       <div className="App">
         {/* fixed loader that wouldnt appear unless loading is true also , it is fixed spinner with primary color  */}
         <BrowserRouter>

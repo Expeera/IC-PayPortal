@@ -1,13 +1,9 @@
 import React, { useContext } from "react"
-import { useEffect } from "react"
 import { useForm } from "react-hook-form"
-import { Link, useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { yupResolver } from "@hookform/resolvers/yup"
 import * as yup from "yup"
-import TextInput from "../Inputs/Text"
-import { Toggle } from "../Inputs/Toggle"
 import { AppContext } from "../../App"
-import Logo from "../Logo"
 
 interface loginErrorsInterface {
   email: { message: string }
@@ -15,17 +11,11 @@ interface loginErrorsInterface {
 }
 
 export const Login = () => {
-  const {
-    login: connect,
-    isAuthenticated,
-    loading,
-    // loadingUser,
-  } = useContext(AppContext)
+  const { login: connect, isAuthenticated, loading } = useContext(AppContext)
   console.log({
     isAuthenticated,
     lastfrom: sessionStorage.getItem("privateRouteLastFrom"),
   })
-  // password should be atleast 8 alpha-numeric characters with atleast one special character and one capital letter
   const schema = yup.object().shape({
     email: yup.string().email().required(),
     password: yup
@@ -49,21 +39,11 @@ export const Login = () => {
 
   const onSubmit = async (data: any) => {
     try {
-      // await login(data.email, data.password);
       navigate(lastFrom)
     } catch (error) {
       console.log(error)
     }
   }
-
-  // useEffect(() => {
-  //   if(loading || loadingUser) return
-  //   if (user) {
-  //     navigate("/")
-  //   } else if (isAuthenticated) {
-  //     navigate("/auth/complete-profile")
-  //   }
-  // }, [isAuthenticated, loadingUser, loading])
 
   return (
     <div className="flex items-center justify-center h-full w-full gap-x-32 max-w-screen-xl mx-auto">
