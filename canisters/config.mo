@@ -6,7 +6,7 @@ module {
 
     private let devConfig = {
         // Define the frontend canister ID used for constructing URLs
-        frontendCanisterId= "bkyz2-fmaaa-aaaaa-qaaaq-cai";
+        frontendCanisterId= "b77ix-eeaaa-aaaaa-qaada-cai";
         baseUrl= "localhost:8000";
         http= "http://";
     };

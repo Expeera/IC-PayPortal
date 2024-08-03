@@ -29,7 +29,7 @@ module {
 
     public module Stripe {
 
-        private let secret_key = "sk_test_51NBY4OJqHgeFtVGPrrtNb505mCmzGyqOKaqJqvywC0L8xUVeyILcs26tORro3E30Nap9fW5cCoiebQMqUNLNlErQ00iykNQPk0";
+        private let secret_key = "sk_test_51PjiAfJn7Y4dLWl6TWzmOcWwb3wBEiV3uZeE6k31dKaY9vCzAUX6l3vP3MyZmUuFTYtWDVLdFFxCsy6hIb24h3be00msW4De0O";
         
         public type CreateSessionApi = {
             status: Bool;
@@ -239,7 +239,7 @@ module {
                 case (?y) { y };
             };
 
-             Debug.print(decoded_text);
+            //  Debug.print(decoded_text);
 
             let blob = serdeJson.fromText(decoded_text);
 
