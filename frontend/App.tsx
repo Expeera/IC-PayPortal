@@ -1,7 +1,7 @@
 /*
  * Import canister definitions like this:
  */
-import React from "react"
+import React, { useState } from "react"
 import { BrowserRouter, Route, Routes } from "react-router-dom"
 import { DefaultLayout } from "./components/Layouts/Default"
 import { ToastContainer } from "react-toastify"
@@ -18,6 +18,7 @@ import Admin from "./components/pages/Admin"
 import Cancel from "./components/pages/Cancel"
 import "bootstrap/dist/css/bootstrap.min.css"
 import MyInvoices from "./components/pages/MyInvoices"
+import Header from "./components/Header"
 
 interface AppStateInterface {
   authClient?: AuthClient
@@ -27,6 +28,7 @@ interface AppStateInterface {
   setIsAuthenticated?: React.Dispatch<React.SetStateAction<boolean | null>>
   login: () => void
   logout: () => void
+  handlePageView:()=>void
   actor: ActorSubclass<_SERVICE>
   isOwner?: () => boolean | Promise<boolean>
 }
@@ -36,19 +38,22 @@ const INITIAL_APP_STATE = {
   user: null,
   login: () => {},
   logout: () => {},
-  isOwner: async () => {
-    return false
-  },
+  handlePageView: () => {},
+  isOwner: async () => {},
   nftActor: undefined,
   ledgerActor: undefined,
 }
+
+
 export const AppContext =
   React.createContext<AppStateInterface>(INITIAL_APP_STATE)
 
 // @todo take all the strings to a seperate file and import them here
 // @todo take the routing logic out of the app component
 function App() {
+  
   const {
+    handlePageView,
     authClient,
     setAuthClient,
     isAuthenticated,
@@ -63,6 +68,7 @@ function App() {
   return (
     <AppContext.Provider
       value={{
+        handlePageView,
         authClient,
         setAuthClient,
         isAuthenticated,
@@ -79,6 +85,8 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route path="/auth" element={<DefaultLayout />}>
+            {  console.log("isAuthenticated",isAuthenticated)}
+
               <Route
                 path="login"
                 element={!isAuthenticated ? <Login /> : <DefaultLayout />}
@@ -90,13 +98,15 @@ function App() {
             <Route path="paypal/success/:invoiceNo" element={<Success />} />
             <Route path="paypal/cancel/:invoiceNo" element={<Cancel />} />
 
-            <Route path="/checkout" element={<Form />} />
+            <Route path="/checkout" element={ <Form />} />
             <Route path="/my-invoices" element={<MyInvoices />} />
             <Route path="/admin" element={<Admin />} />
             <Route
               path="/"
               element={
                 <Authenticated>
+                        {/* <Header handlePageView={handlePageView} /> */}
+
                   <DefaultLayout />
                 </Authenticated>
               }

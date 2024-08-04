@@ -7,25 +7,40 @@ import { _SERVICE } from "../declarations/fiat/fiat.did"
 import react, { useEffect, useState } from "react"
 import { Principal } from "@dfinity/principal"
 import { toast } from "react-toastify"
+import { useNavigate } from "react-router-dom"
+
 type UseAuthClientProps = {}
 
 export interface Invoice {
-  id: number
-  owner: Principal
-  amount: number
-  status: string
-  transactionId: string
-  paymentLink: string
-  paymentMethod: string
-  currency: string
-  createdAt: number
+  id: number;
+  owner: Principal;
+  amount: number;
+  status: string;
+  transactionId: string;
+  paymentLink: string;
+  paymentMethod: string;
+  currency: string;
+  createdAt: number;
 }
 
 export function useAuthClient(props?: UseAuthClientProps) {
   const [authClient, setAuthClient] = useState<AuthClient>()
   const [actor, setActor] = useState<ActorSubclass<_SERVICE>>()
+
   const [isAuthenticated, setIsAuthenticated] = useState<null | boolean>(null)
+  const [hasLoggedIn, setHasLoggedIn] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [loadingUser, setLoadingUser] = useState(false)
+  const [accountId, setAccountId] = useState("")
+  const [balance, setBalance] = useState("")
+  const [pageView, setPageView] = useState("products");
+  const [productSelected, setProductSelected] = useState("products");
+
+  const handlePageView = (page, productDetails) => {
+    setPageView(page);
+    setProductSelected(productDetails);
+  };
+  // const [leasePricePerDay, setLeasePricePerDay] = useState<BigInt>()
 
   const initializeAuthClient = (): Promise<void> => {
     return AuthClient.create({
@@ -56,9 +71,12 @@ export function useAuthClient(props?: UseAuthClientProps) {
       onSuccess: async () => {
         if (!isAuthenticated) {
           console.log("here2")
-          cb("/checkout")
+          cb("/invoice")
           toast.info("Login successful")
           setIsAuthenticated(true)
+          setTimeout(() => {
+            setHasLoggedIn(true)
+          }, 100)
           await initActor()
         }
       },
@@ -73,7 +91,7 @@ export function useAuthClient(props?: UseAuthClientProps) {
   const isOwner = async () => {
     if (!actor) return false
 
-    const checkOwner = await actor.is_owner()
+    const checkOwner = await actor.isOwner()
     console.log("checkOwner: ", {
       checkOwner,
     })
@@ -81,6 +99,8 @@ export function useAuthClient(props?: UseAuthClientProps) {
   }
 
   const initActor = async () => {
+ 
+    // if (user) return
     console.log({ auth: await authClient.isAuthenticated() })
     try {
       const actor = createActor(canisterId as string, {
@@ -89,6 +109,14 @@ export function useAuthClient(props?: UseAuthClientProps) {
         },
       })
       setActor(actor)
+
+      // var accountId = await actor.getAccountId()
+      // console.log("GetAccountId", accountId)
+      // setAccountId(accountId)
+
+      var isOwnerVal = await isOwner();
+      console.log("isOwner", isOwnerVal);
+
       if (authClient) {
         console.log("aaaaaaa", authClient?.getIdentity())
       }
@@ -98,8 +126,11 @@ export function useAuthClient(props?: UseAuthClientProps) {
         "aaaaaaaaaaaa",
         authClient?.getIdentity().getPrincipal().toString(),
       )
+
+      
     } catch (error) {
       console.log({ error })
+      toast.info("fetching user failed, please try again later")
     } finally {
       setLoading(false)
     }
@@ -110,6 +141,7 @@ export function useAuthClient(props?: UseAuthClientProps) {
     sessionStorage.clear()
     setIsAuthenticated(false)
     setActor(undefined)
+    setLoadingUser(false)
     initializeAuthClient()
     await authClient.logout()
     toast.info("Logout successful")
@@ -135,5 +167,9 @@ export function useAuthClient(props?: UseAuthClientProps) {
     logout,
     isOwner,
     actor,
+    balance,
+    hasLoggedIn,
+    loadingUser,
+    handlePageView,
   }
 }

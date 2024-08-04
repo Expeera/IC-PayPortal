@@ -1,0 +1,53 @@
+span.view {
+  background: linear-gradient(
+    148deg,
+    rgba(95, 114, 232, 1) 33%,
+    rgba(75, 25, 213, 1) 65%,
+    rgba(99, 56, 226, 1) 78%,
+    rgba(177, 134, 241, 1) 100%
+  );
+  padding: 5px 8px;
+  border-radius: 4px;
+  color: #fff;
+  cursor: pointer;
+}
+.customeTable {
+  border: 1px solid #eee;
+}
+.customeTable td,
+.customeTable th {
+  padding: 15px 15px !important;
+}
+span.cancelled {
+  background: #ffbdbd;
+  color: #f00;
+  padding: 3px 10px;
+  border-radius: 4px;
+  width: 100px;
+  display: block;
+  text-align: center;
+}
+span.completed {
+  background: #00800036;
+  color: green;
+  padding: 3px 10px;
+  border-radius: 4px;
+  width: 100px;
+  display: block;
+  text-align: center;
+}
+span.pending {
+  background: #ff870054;
+  color: #ff8700;
+  padding: 3px 10px;
+  border-radius: 4px;
+  width: 100px;
+  display: block;
+  text-align: center;
+}
+.ml-2 {
+  margin-left: 5px;
+}
+span.id_BackBtn a.nav-link {
+  width: 100%;
+}

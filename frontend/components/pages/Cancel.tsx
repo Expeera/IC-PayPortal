@@ -1,9 +1,12 @@
 import React, { useContext, useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
 import { toast } from "react-toastify"
 import { AppContext } from "../../App"
 import { useNavigate } from "react-router-dom"
-
+import { Col, Container, Row } from "react-bootstrap"
+import Header from "../Header"
+import Footer from "../Footer"
+import "../success.css";
 export interface ConfirmInvoiceBody {
   invoiceNo: number
   paymentMethod: string
@@ -46,8 +49,34 @@ export default function Cancel() {
   }, [isAuthenticated, actor])
 
   return (
-    <div>
-      <h1 style={{ textAlign: "center" }}>{message}</h1>
-    </div>
+    <>
+    <Header />
+    <Container className="my-5">
+     <Row className="mb-5 pb-5">
+     <Col md={12} className="TitleCheckOut mb-5"> 
+         <span
+           className="id_BackBtn"
+           id="id_BackBtn" >
+             <Link className="nav-link" to="/checkout" ><i className="bi bi-arrow-left"></i></Link>
+         </span>
+         <h2>Invoice Cancelled Successfully</h2>
+       </Col>
+       <Col md={12}>
+          <Row className="justify-content-md-center">
+          <Col md={5} className="iconStatusPaymen Cancelled">
+          <i className="bi bi-x-circle-fill"></i>
+            <h1>
+            Thank you  <br/>
+            Your invoice has been  <span>Cancelled </span>  successfully.
+
+            </h1>
+          </Col>
+          </Row>
+        </Col>
+       
+     </Row>
+     </Container>
+    <Footer/>
+   </>
   )
 }

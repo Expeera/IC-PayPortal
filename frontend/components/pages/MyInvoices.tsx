@@ -1,10 +1,12 @@
 import Button from "react-bootstrap/Button"
 import Modal from "react-bootstrap/Modal"
 import React, { useContext, useState, useEffect } from "react"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { AppContext } from "../../App"
-import Header from "../Navbar"
-
+import Header from "../Header"
+import Footer from "../Footer"
+import "../invoices.css";
+import { Col, Container, Row, Table } from "react-bootstrap"
 export default function MyInvoices() {
   const { logout, isAuthenticated, actor, isOwner } = useContext(AppContext)
   console.log(isAuthenticated)
@@ -55,74 +57,71 @@ export default function MyInvoices() {
 
   return (
     <>
+   
       <Header />
-
-      <div
-        style={{
-          width: "100%",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          marginTop: "20px",
-        }}
-      >
-        <div>
-          <h2>My Invoices</h2>
-        </div>
-        <div className="table-container">
-          <table className="styled-table">
+      <Container className="my-5">
+      <Row className="mb-5 pb-5">
+        <Col md={12} className="TitleCheckOut mb-5"> 
+          <span
+            className="id_BackBtn"
+            id="id_BackBtn" >
+              <Link className="nav-link" to="/checkout" ><i className="bi bi-arrow-left"></i></Link>
+          </span>
+          <h2>Invoices</h2>
+        </Col>
+        <Col md={12}>
+          <Table responsive striped className="customeTable">
             <thead>
               <tr>
-                <th>Invoice NO</th>
+                <th>Invoice No</th>
                 <th>Amount</th>
-                <th>currency</th>
-                <th>Payment Method</th>
-                <th>status</th>
+                <th>Currency</th>
+                <th>Payment Methoda</th>
+                <th>Status</th>
                 <th>Create At</th>
                 <th>Action</th>
               </tr>
             </thead>
             <tbody>
-              {invoices.map((item) => (
+            {invoices.map((item) => (
                 <tr key={item.id}>
                   <td>{parseInt(item.id)}</td>
                   <td>{parseFloat(item.amount).toFixed(2)}</td>
                   <td>{item.currency}</td>
                   <td>{item.paymentMethod}</td>
-                  <td>{item.status}</td>
+                  <td>
+                    <span className={
+                    item.status === 'pending' ? 'pending' :
+                    item.status === 'completed' ? 'completed' :
+                    item.status === 'cancelled' ? 'cancelled' : ''
+                  }>
+                      {item.status}
+                    </span>
+                  </td>
                   <td>
                     {new Date(
                       parseInt(item.createdAt) / (1000 * 1000),
                     ).toLocaleString()}
                   </td>
-                  <td
-                    className="d-flex justify-content-center align-items-center gap-1"
-                    style={{ flexDirection: "row" }}
-                  >
-                    {item.status == "Pending" ? (
-                      <a
-                        className="btn btn-warning"
-                        href={item.paymentLink}
-                        target="_blank"
-                      >
-                        Go To Pay
-                      </a>
-                    ) : (
-                      ""
-                    )}
-                    <>
-                      <Button
-                        variant="primary"
-                        onClick={() => handleShow(item)}
-                      >
-                        View
-                      </Button>
+                  <td>
+                      <span className="view" onClick={() => handleShow(item)}>
+                        <i className="bi bi-eye-fill ml-0"></i>
+                      </span>
+                      {item.status == "Pending" && (
+                        <span className="view ml-2">
+                        <a className="w-100" href={item.paymentLink} target="_blank" >
+                          <i className="bi bi-wallet2"></i>
+                        </a>
+                      </span>
+                      )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        </Col>
 
-                      <Modal
-                        show={show}
-                        onHide={handleClose}
-                        style={{ width: "100%" }}
-                      >
+        <Modal show={show}  onHide={handleClose} style={{ width: "100%" }} >
                         <Modal.Header closeButton>
                           <Modal.Title>
                             Invoice NO: {selectedInvoice?.id}
@@ -181,14 +180,9 @@ export default function MyInvoices() {
                           </Button>
                         </Modal.Footer>
                       </Modal>
-                    </>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+      </Row>
+      </Container>
+      <Footer/>
     </>
   )
 }

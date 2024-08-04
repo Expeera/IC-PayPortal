@@ -1,6 +1,6 @@
-# 🚧 Fiat Payment Module for Motoko
+# 🚧 Expeera Module for Motoko
 
-The Fiat Payment Module for Motoko is a library that provides developers with a set of functions for managing fiat payments on the Internet Computer Protocol (ICP). This module enables seamless integration of popular fiat payment gateways such as `Stripe` and `Paypal` into Motoko applications.
+The Expeera Module for Motoko is a library that provides developers with a set of functions for managing Expeeras on the Internet Computer Protocol (ICP). This module enables seamless integration of popular Expeera gateways such as `Stripe` and `Paypal` into Motoko applications.
 
 [Live Demo](https://3356i-cqaaa-aaaao-axdqa-cai.icp0.io/): https​&#65279;://3356i-cqaaa-aaaao-axdqa-cai.icp0.io
 
@@ -12,10 +12,10 @@ https​&#65279;://ipv6.mcti.io
 
 ## Features
 
-The Fiat Payment Module offers the following features:
+The Expeera Module offers the following features:
 
 - ### Payment Gateway Integration: 
-    The module supports integration with popular fiat payment gateways, allowing developers to accept payments from various sources.
+    The module supports integration with popular Expeera gateways, allowing developers to accept payments from various sources.
 
 - ### Payment Processing:
     It provides functions to handle payment processing tasks, such as creating payment requests, verifying transactions, and handling callbacks.
@@ -108,7 +108,7 @@ The Fiat Payment Module offers the following features:
 9. To test run `sh test/demo.sh`
 
 ### 🕹️ API`s
-Here is a step-by-step guide on how to use the `Fiat Payment` Module:
+Here is a step-by-step guide on how to use the `Expeera` Module:
 
 ### 1. Create New Invoice:
 

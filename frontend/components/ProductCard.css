@@ -1,0 +1,75 @@
+img.card-img-top {
+  height: 440px;
+  object-fit: cover;
+}
+.card {
+  border-radius: 8px;
+  overflow: hidden;
+}
+.card .card-body {
+  position: absolute;
+  background: #00000080;
+  width: 100%;
+  height: 100%;
+  color: #fff;
+}
+.priceLable {
+  display: flex;
+  align-items: center;
+  background: #ffffff5c;
+  padding: 4px 24px;
+  border-radius: 8px;
+  width: -moz-fit-content;
+  width: fit-content;
+  text-transform: capitalize;
+  min-height: 41px;
+  margin-right: 7px;
+  font-size: 16px;
+  font-weight: 600;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border-width: 0;
+}
+.card-title {
+  font-weight: bold;
+  font-size: 24px;
+}
+.card .card-body button.AddToCart {
+  padding: 4px 24px;
+  border-radius: 8px;
+  text-transform: capitalize;
+  min-height: 42px;
+  font-size: 16px;
+  font-weight: 600;
+  align-items: center;
+  display: flex;
+  /* position: absolute;
+  bottom: 1rem; */
+}
+.card .card-body button.AddToCart i {
+  margin-right: 10px;
+  font-size: 24px;
+}
+.CartControll {
+  position: absolute;
+  bottom: 1rem;
+  display: flex;
+  align-items: center;
+}
+.CartControll .actionControlCart {
+  margin-left: 0em;
+  align-items: center;
+  display: flex;
+}.CartControll .actionControlCart span {
+  margin: 0 15px;
+  font-size: 20px;
+  font-weight: 700;
+  width: 2rem;
+  text-align: center;
+}.CartControll .actionControlCart i {
+  font-size: 28px;cursor: pointer;
+}.CartControll .actionControlCart i:hover {
+  color: #c8d0ff;
+}.mr-5 {
+  margin-right: 4rem;
+}

@@ -1,0 +1,22 @@
+.iconStatusPaymen {
+  text-align: center;
+  padding: 2.5rem 0;
+}
+.iconStatusPaymen i {
+    font-size: 140px;
+}
+.iconStatusPaymen h1 {
+  font-size: 30px;
+  font-weight: 700;
+}
+.iconStatusPaymen.Success i {
+  color: #00ca00;
+}
+.iconStatusPaymen.Success h1 span {
+  color: #00ca00;
+}.iconStatusPaymen.Cancelled i {
+  color: #ff004e;
+}
+.iconStatusPaymen.Cancelled h1 span {
+    color: #ff004e;
+}

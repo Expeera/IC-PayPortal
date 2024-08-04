@@ -1,0 +1,140 @@
+span.id_BackBtn {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  border: 2px solid #000;
+  align-items: center;
+  text-align: center;
+  border-radius: 50%;
+  cursor: pointer;
+  color: #000;
+}
+span.id_BackBtn i {
+  margin: 0 auto;
+  font-size: 22px;
+  height: auto;
+}
+.TitleCheckOut h2 {
+  margin-bottom: 0;
+  font-weight: bold;
+  margin-left: 2rem;
+}
+.TitleCheckOut {
+  display: flex;
+  align-items: center;
+}
+.CheckOutBox {
+  padding: 1rem;
+  background: #eee;
+  border-radius: 8px;
+  height: 440px;
+}
+.SelectPaymentMethod {
+  display: flex;
+}
+.Method img.imgPayment {
+  height: 33px;
+}
+.Method {
+  width: 50%;
+  background: #fff;
+  text-align: center;
+  padding: 10px;
+  margin: 5px;
+  border-radius: 8px;
+  cursor: pointer;
+  border: 2px solid #fff;
+  height: 56px;
+}
+.SelectPaymentMethodBox h6 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 10px 10px 10px;
+}
+.Method span {
+  display: flex;
+  font-size: 18px;
+  font-weight: 600;
+  align-items: center;
+  margin: 0 auto;
+  width: max-content;
+  padding: 3px;
+}
+.Method span i {
+  font-size: 20px;
+  margin-right: 5px;
+}
+.Method.price {
+  background: #f8f9fa;
+  border: 2px solid #f8f9fa;
+  cursor: auto;
+}
+button.payNowBtn.btn.btn-primary {
+  background-image: linear-gradient(
+    148deg,
+    rgba(95, 114, 232, 1) 33%,
+    rgba(75, 25, 213, 1) 65%,
+    rgba(99, 56, 226, 1) 78%,
+    rgba(177, 134, 241, 1) 100%
+  );
+  border: 0px;
+  font-size: 18px;
+  padding: 10px;
+  font-weight: bold;
+}
+button.payNowBtn.btn.btn-primary:hover {
+  background-image: linear-gradient(to bottom, #7a38faf2, #6a2fde);
+}
+.Method.selected {
+  border: 2px solid #000;
+}
+.cardInCart img.card-img-top {
+  height: 100px;
+  width: 100px;
+  border-radius: 8px;
+}.cardInCart .card {
+  display: flex;
+  align-items: center;
+  position: relative;
+  flex-direction: row;
+}.imgProduct {
+  width: 100px;
+  margin-right: 10px;
+}.cardInCart .card .card-body {
+  position: relative;
+  color: #000;
+  background: unset;
+  width: auto;
+  height: auto;    padding: 0;    margin-right: 0px;
+}.cardInCart h5.card-title {
+  display: flex;    align-items: center;margin-bottom: 3px;    font-size: 20px;
+}.cardInCart span.price-label-product {
+  margin-left: 2rem;
+  margin-right: 0;
+  font-size: 16px;
+  color: #9368ec;
+  background: #9368ec40;
+  padding: 3px 8px;
+  border-radius: 4px;
+}.cardInCart .quantityPrice {
+
+  text-align: right;
+  padding: 0 1rem;
+}.cardInCart .quantityPrice .actionControlCart span {
+  width: 30px;
+  margin: 0 5px;
+  text-align: center;
+}.cardInCart .quantityPrice .actionControlCart i {
+  font-size: 20px;    cursor: pointer;
+}.cardInCart .quantityPrice .actionControlCart {
+  display: flex;
+  align-items: center;    margin-bottom: 10px;
+}span.totalPriceSpan {
+  font-weight: 700;
+  font-size: 16px;
+}.cardInCart .quantityPrice .actionControlCart i:hover {
+  color: #9368ec;
+}button .spinner-grow.text-light {
+  width: 15px;
+  height: 15px;
+}
