@@ -102,7 +102,8 @@ export default function MyInvoices() {
                     item.status === 'Pending' ? 'pending' :
                     item.status === 'Completed' ? 'completed' :
                     item.status === 'Cancelled' ? 'cancelled' : 
-                    item.status === 'Cancelled by system' ? 'cancelledSystem' :''
+                    item.status === 'Cancelled by system' ? 'cancelledSystem' :'':
+                    item.status === 'Cancelled by admin' ? 'cancelledSystem' :''
                   }>
                       {item.status}
                     </span>
