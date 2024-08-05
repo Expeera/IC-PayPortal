@@ -84,7 +84,7 @@ export default function MyInvoices() {
                   <th>Invoice No</th>
                   <th>Amount</th>
                   <th>Currency</th>
-                  <th>Payment Methoda</th>
+                  <th>Payment Method</th>
                   <th>Status</th>
                   <th>Create At</th>
                   <th>Action</th>
