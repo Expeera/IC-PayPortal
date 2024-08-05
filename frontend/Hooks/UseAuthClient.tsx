@@ -91,7 +91,7 @@ export function useAuthClient(props?: UseAuthClientProps) {
   const isOwner = async () => {
     if (!actor) return false
 
-    const checkOwner = await actor.isOwner()
+    const checkOwner = await actor.is_owner()
     console.log("checkOwner: ", {
       checkOwner,
     })

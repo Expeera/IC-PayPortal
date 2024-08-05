@@ -4,11 +4,6 @@ type TransformArgs =
    response: HttpResponsePayload;
  };
 type StatusCode = nat;
-type Result = 
- variant {
-   err: opt Message;
-   ok: opt CreateSession;
- };
 type Response_3 = 
  record {
    body: ResponseStatus_3;
@@ -57,7 +52,6 @@ type Response =
    status: bool;
    status_code: StatusCode;
  };
-type Message = text;
 type Item = 
  record {
    id: nat;
@@ -88,11 +82,6 @@ type HttpHeader =
  record {
    name: text;
    value: text;
- };
-type CreateSession = 
- record {
-   id: text;
-   url: text;
  };
 type CreateInvoiceBody__1 = 
  record {
@@ -144,6 +133,5 @@ service : {
   get_my_invoices: () -> (Response) query;
   invoice_count: () -> (nat) query;
   is_owner: () -> (bool) query;
-  test: () -> (Result);
   transform: (TransformArgs) -> (CanisterHttpResponsePayload) query;
 }

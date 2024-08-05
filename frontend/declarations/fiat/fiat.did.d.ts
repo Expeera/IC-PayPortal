@@ -32,7 +32,6 @@ export interface CreateInvoiceBody__1 {
   'id' : bigint,
   'payment' : { 'redirectUrl' : string, 'transactionId' : string },
 }
-export interface CreateSession { 'id' : string, 'url' : string }
 export interface HttpHeader { 'value' : string, 'name' : string }
 export interface HttpResponsePayload {
   'status' : bigint,
@@ -57,7 +56,6 @@ export interface Item {
   'quantity' : bigint,
   'price' : number,
 }
-export type Message = string;
 export interface Response {
   'status' : boolean,
   'body' : ResponseStatus,
@@ -90,8 +88,6 @@ export interface Response_3 {
   'message' : string,
   'status_code' : StatusCode,
 }
-export type Result = { 'ok' : [] | [CreateSession] } |
-  { 'err' : [] | [Message] };
 export type StatusCode = bigint;
 export interface TransformArgs {
   'context' : Uint8Array | number[],
@@ -110,6 +106,5 @@ export interface _SERVICE {
   'get_my_invoices' : ActorMethod<[], Response>,
   'invoice_count' : ActorMethod<[], bigint>,
   'is_owner' : ActorMethod<[], boolean>,
-  'test' : ActorMethod<[], Result>,
   'transform' : ActorMethod<[TransformArgs], CanisterHttpResponsePayload>,
 }
