@@ -18,9 +18,66 @@ span.view {
 .customeTable th {
   padding: 15px 15px !important;
 }
+button.btn-close {
+  border: 1px solid #000;
+  border-radius: 50%;
+  position: absolute;
+  right: 0px;
+  background-color: #fff;
+  opacity: 1;
+  top: 0px;
+}
+.TitleCheckOut h2.ml-0 {
+  margin-left: 0;
+}
 span.cancelled {
   background: #ffbdbd;
   color: #f00;
+  padding: 3px 10px;
+  border-radius: 4px;
+  width: 100px;
+  display: block;
+  text-align: center;
+}.modal-title {
+  margin-bottom: 0;
+  font-weight: 700;
+  color: #000;
+}
+.titleDiv p span.pending, .titleDiv p span.completed ,.titleDiv p span.cancelledSystem ,.titleDiv p span.cancelled {
+  background: unset;
+  display: unset;
+}
+.table-container h3 {
+  margin-bottom: 15px;
+  font-weight: 700;
+  color: #000;
+  font-size: 22px;
+}
+.status-button {
+  margin-right: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+.ButtonsAction {
+  display: flex;
+}
+.status-button:hover {
+  background-color: #e0e0e0;
+}
+
+span.cancelledSystem {
+  background: #ffbdbd;
+  color: red;
+  padding: 3px 10px;
+  border-radius: 4px;
+  width: 100px;
+  /* display: block; */
+  text-align: center;
+  display: unset;
+}
+span.cancelledSystemA {
+  background: #ffbdbd;
+  color: red;
   padding: 3px 10px;
   border-radius: 4px;
   width: 100px;
@@ -50,4 +107,30 @@ span.pending {
 }
 span.id_BackBtn a.nav-link {
   width: 100%;
+}
+span.view i {
+  color: #fff;
+}
+span.view a i {
+  margin-right: 5px;
+}
+span.view a {
+  color: #fff;
+  text-decoration: unset;
+}
+.titleDiv {
+  margin-bottom: 15px;
+}
+.titleDiv p {
+  margin-bottom: 0;
+}
+.titleDiv p {
+  margin-bottom: 0;
+  display: block;
+  width: 100%;
+  text-align: center;
+  border: 0px solid #ccc;
+  padding: 1.5rem 0;
+  background: #eee;
+  border-radius: 4px;
 }

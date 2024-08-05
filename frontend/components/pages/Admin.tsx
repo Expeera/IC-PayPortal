@@ -1,11 +1,11 @@
 import React, { useContext, useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { AppContext } from "../../App"
-import "./table.css" // Import the CSS file
 import { toast } from "react-toastify"
-
-import Header from "../Navbar"
-
+import "../invoices.css";
+import Header from "../Header"
+import { Button, Col, Container, Row, Table } from "react-bootstrap"
+import Footer from "../Footer";
 export interface ConfirmInvoiceAdminBody {
   invoiceNo: number;
   paymentMethod: string;
@@ -14,132 +14,109 @@ export interface ConfirmInvoiceAdminBody {
 
 
 export default function Admin() {
+  const [invoices, setInvoices] = useState([])
   const navigate = useNavigate()
   const { logout, isAuthenticated, actor, isOwner } = useContext(AppContext)
 
   useEffect(() => {
     const checkIsOwner = async () => {
       const ownerValue = await isOwner()
-      console.log(ownerValue)
-
       if (!ownerValue) {
         navigate("/checkout")
       }
     }
-
     checkIsOwner()
   }, [isOwner, navigate])
-
-
-  const [invoices, setInvoices] = useState([])
 
   async function invoicesFun() {
 
     actor.get_all_invoices_to_admin()
       .then((data) => {
-        console.log("invoices", { data })
-
         if (data.status) {
           if ("success" in data.body) {
             setInvoices(data.body.success)
           }
-          // toast.success(data.message)
         } else {
           toast.error(data.message)
         }
       })
       .catch((err) => {
-        console.log("invoices err", { err })
         toast.error(err.message)
       })
-
   }
 
   useEffect(() => {
-    
-
     isAuthenticated && actor && invoicesFun()
   }, [isAuthenticated, actor])
-
-  // const handleClickLogout = () => {
-  //   logout()
-  //   navigate("/auth/login")
-  // }
-
-  const handleStatusChange = async (index, item, e) => {
+  const handleStatusChange = async (index, item, status) => {
     const confirmed = window.confirm(
-      `Do you want to change the status of Invoice ID ${item.id} to: ${e.target.value}?`,
-    )
-
+      `Do you want to change the status of Invoice ID ${item.id} to: ${status}?`,
+    );
+  
     if (confirmed) {
-      console.log(`Invoice ID ${item.id} status changed to: ${e.target.value}`)
-
-      let data: ConfirmInvoiceAdminBody = {
+      let data = {
         invoiceNo: parseInt(item.id),
         paymentMethod: item.paymentMethod,
-        isCompleted: e.target.value === "Completed",
+        isCompleted: status === "Completed",
+      };
+  
+      try {
+        const response = await actor.change_invoice_status_to_admin(data);
+        if (response.status) {
+          toast.success(response.message);
+          document.getElementById('status-buttons' + index).innerHTML = status === "Completed" ? "Completed" : "Cancelled by admin";
+        } else {
+          toast.error(response.message);
+        }
+      } catch (err) {
+        console.log({ err });
+        toast.error(err.message);
       }
-
-      console.log("data", data);
-      actor.change_invoice_status_to_admin(data)
-        .then((data) => {
-          console.log({ data })
-
-          if (data.status) {
-            toast.success(data.message)
-            e.target.remove();
-            document.getElementById('td-status' + index).innerHTML = e.target.value === "Completed" ? "Completed" : "Cancelled by admin	";
-          } else {
-            toast.error(data.message)
-          }
-
-        })
-        .catch((err) => {
-          console.log({ err })
-          toast.error(err.message)
-        })
-
-      // if (selectedValue === "Pending") {
-      //   toast.error(`Invoice ID ${id} status changed to: ${selectedValue}`)
-      // } else if (selectedValue === "Completed") {
-      //   toast.success(`Invoice ID ${id} status changed to: ${selectedValue}`)
-      // }
-
-
-    } else {
-      document.getElementById("select" + index).selectedIndex = 0;
     }
-  }
+  };
+  
+  // const handleStatusChange = async (index, item, e) => {
+  //   const confirmed = window.confirm(
+  //     `Do you want to change the status of Invoice ID ${item.id} to: ${e.target.value}?`,
+  //   )
+
+  //   if (confirmed) {
+  //     let data: ConfirmInvoiceAdminBody = {
+  //       invoiceNo: parseInt(item.id),
+  //       paymentMethod: item.paymentMethod,
+  //       isCompleted: e.target.value === "Completed",
+  //     }
+  //     actor.change_invoice_status_to_admin(data)
+  //       .then((data) => {
+  //         if (data.status) {
+  //           toast.success(data.message)
+  //           e.target.remove();
+  //           document.getElementById('td-status' + index).innerHTML = e.target.value === "Completed" ? "Completed" : "Cancelled by admin	";
+  //         } else {
+  //           toast.error(data.message)
+  //         }
+  //       })
+  //       .catch((err) => {
+  //         console.log({ err })
+  //         toast.error(err.message)
+  //       })
+
+  //   } else {
+  //     document.getElementById("select" + index).selectedIndex = 0;
+  //   }
+  // }
 
   return (
      <>
-      <Header isAdmin={true}/>
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      {/* <button
-        onClick={handleClickLogout}
-        style={{
-          padding: "15px 20px",
-          backgroundColor: "#dc3545",
-          color: "#fff",
-          border: "none",
-          cursor: "pointer",
-          borderRadius: "8px",
-          fontSize: "18px",
-        }}
-      >
-        Logout
-      </button> */}
-      <h1>All Invoices</h1>
-      <div>
-        <div className="table-container">
-          <table className="styled-table">
+        <Header isAdmin={true}/>
+        <Container className="my-5">
+      <Row className="mb-5 pb-5">
+        <Col md={12} className="TitleCheckOut mb-5"> 
+          <h2 className="ml-0">All Invoices</h2>
+        </Col>
+        
+        <Col md={12}>
+          <Table responsive striped className="customeTable">
             <thead>
               <tr>
                 <th>Invoice NO</th>
@@ -160,16 +137,45 @@ export default function Admin() {
                   <td>{parseFloat(item.amount).toFixed(2)}</td>
                   <td>{item.currency}</td>
                   <td>{item.paymentMethod}</td>
-                  <td id={'td-status' + index}>{item.status}</td>
+                  <td id={'td-status' + index}>
+                    <span className={
+                    item.status === 'Pending' ? 'pending' :
+                    item.status === 'Completed' ? 'completed' :
+                    item.status === 'Cancelled' ? 'cancelled' : 
+                    item.status === 'Cancelled by system' ? 'cancelledSystemA' :''
+                  }>
+                      {item.status}
+                    </span>
+                  </td>
                   <td>
                     {new Date(
                       parseInt(item.createdAt) / (1000 * 1000),
                     ).toLocaleString()}
                   </td>
-                  <td>
-                    {
-                      item.status == "Pending" ?
-                   
+
+                    <td>
+                      {item.status === "Pending" ? (
+                        <div id={'status-buttons' + index} className="ButtonsAction">
+                          <Button variant="success"
+                            className="status-button"
+                            onClick={() => handleStatusChange(index, item, "Completed")}
+                          >
+                            Completed
+                          </Button>
+                           <Button variant="danger"
+                            className="status-button"
+                            onClick={() => handleStatusChange(index, item, "Canceled")}
+                          >
+                            Canceled
+                          </Button>
+                        </div>
+                      ) : (
+                        ''
+                      )}
+                    </td>
+
+                  {/* <td>
+                    {item.status == "Pending" ?
                         <select
                           id = {'select' + index}
                           className="table-select"
@@ -183,15 +189,15 @@ export default function Admin() {
                         </select>
                       : ''
                     }
-                  </td>
+                  </td> */}
 
                 </tr>
               ))}
             </tbody>
-          </table>
-        </div>
-      </div>
-      </div>
+            </Table>
+            </Col>
+            </Row></Container>
+            <Footer/>
     </>
   )
 }

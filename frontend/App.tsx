@@ -84,14 +84,12 @@ function App() {
         {/* fixed loader that wouldnt appear unless loading is true also , it is fixed spinner with primary color  */}
         <BrowserRouter>
           <Routes>
-            <Route path="/auth" element={<DefaultLayout />}>
-            {  console.log("isAuthenticated",isAuthenticated)}
-
-              <Route
+            <Route path="/auth/login" element={<DefaultLayout />} />
+            {/* <Route
                 path="login"
                 element={!isAuthenticated ? <Login /> : <DefaultLayout />}
               ></Route>
-            </Route>
+            </Route> */}
             <Route path="stripe/success/:invoiceNo" element={<Success />} />
             <Route path="stripe/cancel/:invoiceNo" element={<Cancel />} />
 

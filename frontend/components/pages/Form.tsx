@@ -279,9 +279,12 @@ export default function Form() {
 
   console.log("isAuthenticated222",isAuthenticated);
   
-  if (!isAuthenticated) {
-    navigate("/auth/login")
-  }
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate("/auth/login")
+    }
+  }, [isAuthenticated])
+
 
   return (
     <>

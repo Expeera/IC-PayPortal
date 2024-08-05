@@ -5,11 +5,10 @@ import { Link, Outlet, useNavigate, useNavigation } from "react-router-dom"
 import { AppContext } from "../../App"
 import clsx from "clsx"
 import { useState } from "react"
-import Logo from "../../assets/logo.svg"
 import classNames from "classnames"
 import User from "../../assets/person.png"
 import Logo from "../../assets/logo.svg";
-
+import icpLogo from "../../assets/icp-logo.svg";
 import Header from "../Header"
 import Footer from "../Footer"
 import { Button, Col, Container, Row } from "react-bootstrap"
@@ -19,6 +18,13 @@ import "../login.css";
 export const DefaultLayout = () => {
   const { logout, login, isAuthenticated, user, isOwner, balance } =
     useContext(AppContext)
+
+    useEffect(() => {
+      if (isAuthenticated) {
+        navigate("/checkout")
+      }
+    }, [isAuthenticated])
+  
   // @todo take the popup to a seperate component
   const [popupMenuOpen, setPopupMenuOpen] = React.useState(false)
   const navigate = useNavigate()
@@ -37,10 +43,6 @@ export const DefaultLayout = () => {
       })()
     }
   }, [isAuthenticated])
-
-  const handleNavigateToProfile = () => navigate("/profile")
-
-  const handleNavigateToRoot = () => navigate("/")
 
   const handleNavigateToUsers = () => navigate("/users")
 
@@ -83,6 +85,10 @@ export const DefaultLayout = () => {
          </Col>
          <Col md={12} className="text-center">
          &copy; 2024 Expeera. All Rights Reserved.</Col>
+          <Col className="icpLogoDiv mt-4">
+          <img src={icpLogo} className="icpLogo" height={40} alt="icpLogo" />
+          </Col>
+ 
          </Row>
        </Col>
        

@@ -7,6 +7,7 @@ import Header from "../Header"
 import Footer from "../Footer"
 import "../invoices.css";
 import { Col, Container, Row, Table } from "react-bootstrap"
+import { toast } from "react-toastify"
 export default function MyInvoices() {
   const { logout, isAuthenticated, actor, isOwner } = useContext(AppContext)
   console.log(isAuthenticated)
@@ -14,17 +15,17 @@ export default function MyInvoices() {
   const [show, setShow] = useState(false)
 
   const handleClose = () => setShow(false)
-  const handleShow = (invoice) => {
-    setSelectedInvoice(invoice)
-    setShow(true)
-  }
-  const [selectedInvoice, setSelectedInvoice] = useState(null)
+ 
+  const [selectedInvoice, setSelectedInvoice] = useState()
+  const [selectedInvoiceId, setSelectedInvoiceId] = useState()
   const navigate = useNavigate()
   
   const [invoices, setInvoices] = useState([])
-  if (!isAuthenticated) {
-    // navigate("/auth/login")
-  }
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate("/auth/login")
+    }
+  }, [isAuthenticated])
 
   useEffect(() => {
     async function myInvoice() {
@@ -54,6 +55,13 @@ export default function MyInvoices() {
 
     isAuthenticated && actor && myInvoice()
   }, [isAuthenticated, actor])
+
+  const handleShow = (invoice,id) => {   
+    let invoiceId = Number(id) 
+    setSelectedInvoice(invoice);
+    setSelectedInvoiceId(invoiceId);
+    setShow(true)
+  }
 
   return (
     <>
@@ -91,9 +99,10 @@ export default function MyInvoices() {
                   <td>{item.paymentMethod}</td>
                   <td>
                     <span className={
-                    item.status === 'pending' ? 'pending' :
-                    item.status === 'completed' ? 'completed' :
-                    item.status === 'cancelled' ? 'cancelled' : ''
+                    item.status === 'Pending' ? 'pending' :
+                    item.status === 'Completed' ? 'completed' :
+                    item.status === 'Cancelled' ? 'cancelled' : 
+                    item.status === 'Cancelled by system' ? 'cancelledSystem' :''
                   }>
                       {item.status}
                     </span>
@@ -104,13 +113,13 @@ export default function MyInvoices() {
                     ).toLocaleString()}
                   </td>
                   <td>
-                      <span className="view" onClick={() => handleShow(item)}>
+                      <span className="view" onClick={() => handleShow(item,item.id)}>
                         <i className="bi bi-eye-fill ml-0"></i>
                       </span>
                       {item.status == "Pending" && (
                         <span className="view ml-2">
                         <a className="w-100" href={item.paymentLink} target="_blank" >
-                          <i className="bi bi-wallet2"></i>
+                          <i className="bi bi-wallet2"></i>  pay now 
                         </a>
                       </span>
                       )}
@@ -121,65 +130,68 @@ export default function MyInvoices() {
           </Table>
         </Col>
 
-        <Modal show={show}  onHide={handleClose} style={{ width: "100%" }} >
-                        <Modal.Header closeButton>
-                          <Modal.Title>
-                            Invoice NO: {selectedInvoice?.id}
-                          </Modal.Title>
-                        </Modal.Header>
-                        <Modal.Body>
-                          <div className="d-flex gap-2 justify-content-around">
-                            <p>
-                              Total Amount: {parseFloat(selectedInvoice?.amount).toFixed(2)}{" "}
-                              {selectedInvoice?.currency}
-                            </p>
-                            <p>
-                              PaymentMethod: {selectedInvoice?.paymentMethod}
-                            </p>
-                            <p>Status: {selectedInvoice?.status}</p>
-                          </div>
-                          <div
-                            className="table-container"
-                            style={{ width: "100%" }}
-                          >
-                            <h3>Items</h3>
-                            <table
-                              className="styled-table"
-                              style={{ overflowY: "scroll", width: "100%" }}
-                            >
-                              <thead>
-                                <tr>
-                                  <th>Product ID</th>
-                                  <th>Product Name</th>
-                                  <th>Quntity</th>
-                                  <th>Price</th>
-                                  <th>Total</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {
-                                  selectedInvoice?.items.map((item) => (
-                                    <tr>
-                                      <td>{parseInt(item.id)}</td>
-                                      <td>{item.name}</td>
-                                      <td>{parseInt(item.quantity)}</td>
-                                      <td>{parseFloat(item.price)}</td>
-                                      <td>{parseFloat(item.price) * parseInt(item.quantity)} {selectedInvoice?.currency}</td>
-                                    </tr>
-                                  ))
-                                }
-                                
-                                
-                              </tbody>
-                            </table>
-                          </div>
-                        </Modal.Body>
-                        <Modal.Footer>
-                          <Button variant="secondary" onClick={handleClose}>
-                            Close
-                          </Button>
-                        </Modal.Footer>
-                      </Modal>
+        <Modal show={show}  onHide={handleClose} size="lg" >
+          <Modal.Header closeButton>
+            <Modal.Title>
+              Invoice No:  {selectedInvoiceId} 
+              
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <div className="d-flex gap-2 justify-content-around titleDiv">
+              <p>
+                Total Amount: {parseFloat(selectedInvoice?.amount).toFixed(2)}{" "}
+                {selectedInvoice?.currency}
+              </p>
+              <p>
+                PaymentMethod: {selectedInvoice?.paymentMethod}
+              </p>
+              <p>Status: 
+              <span className={
+                    selectedInvoice?.status === 'Pending' ? 'pending' :
+                    selectedInvoice?.status === 'Completed' ? 'completed' :
+                    selectedInvoice?.status === 'Cancelled' ? 'cancelled' : 
+                    selectedInvoice?.status === 'Cancelled by system' ? 'cancelledSystem' :''
+                  }>
+                      {selectedInvoice?.status}
+                    </span>
+                
+                </p>
+            </div>
+            <div
+              className="table-container"
+              style={{ width: "100%" }}
+            >
+              <h3>Items</h3>
+
+              <Table responsive striped className="customeTable">
+                <thead>
+                  <tr>
+                    <th>Product ID</th>
+                    <th>Product Name</th>
+                    <th>Quntity</th>
+                    <th>Price</th>
+                    <th>Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {
+                    selectedInvoice?.items.map((item) => (
+                      <tr>
+                        <td>{parseInt(item.id)}</td>
+                        <td>{item.name}</td>
+                        <td>{parseInt(item.quantity)}</td>
+                        <td>{parseFloat(item.price)}</td>
+                        <td>{parseFloat(item.price) * parseInt(item.quantity)} {selectedInvoice?.currency}</td>
+                      </tr>
+                    ))
+                  }
+                </tbody>
+              </Table>
+            </div>
+          </Modal.Body>
+          
+        </Modal>
       </Row>
       </Container>
       <Footer/>

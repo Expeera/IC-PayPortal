@@ -18,3 +18,22 @@
 .header a.nav-link i {
   margin-right: 10px;
 }
+.changeOwnerModal {
+  padding: 3rem 4rem 4rem !important;
+}
+/* Input styling */
+.form-input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  transition: border-color 0.3s;
+}
+
+.form-input:focus {
+  border-color: #007bff;
+  outline: none;
+}
+.icpLogoDiv {
+  text-align: center;
+}

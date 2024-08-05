@@ -69,16 +69,16 @@ export function useAuthClient(props?: UseAuthClientProps) {
       identityProvider: process.env.II_URL,
       maxTimeToLive: days * hours * nanoseconds,
       onSuccess: async () => {
-        if (!isAuthenticated) {
+        // if (!isAuthenticated) {
           console.log("here2")
-          cb("/invoice")
+          cb("/checkout")
           toast.info("Login successful")
           setIsAuthenticated(true)
           setTimeout(() => {
             setHasLoggedIn(true)
           }, 100)
           await initActor()
-        }
+        // }
       },
       onError: (err) => {
         toast.error("failed to login , please try again later")
