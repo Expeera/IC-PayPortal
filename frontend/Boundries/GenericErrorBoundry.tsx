@@ -25,20 +25,7 @@ class GenericErrorBoundary extends Component<Props, State> {
 
   public render() {
     if (this.state.hasError) {
-      return (
-        // <h1
-        //   style={{
-        //     background: "#dc3545",
-        //     color: "#fff",
-        //     padding: "20px",
-        //     borderRadius: "8px",
-        //     textAlign: "center",
-        //   }}
-        // >
-        //   Sorry.. there was an error
-        // </h1>
-        <></>
-      )
+      return <></>
     }
 
     return this.props.children
