@@ -286,7 +286,7 @@ For a comprehensive understanding of the implementation, including the specific 
 
 - [x] **Present Final Demo and Code Delivery**: Provide a final demonstration of the module and deliver the complete codebase.
 
-- [X] **Resolving IPv6 Issues with ICP Servers**: The Internet Computer (ICP) faces a primary challenge due to its lack of support for IPv4, complicating the integration of external services that rely on IPv4, such as Stripe and PayPal. Direct access to IPv4 services via IPv6 on the ICP network may necessitate the use of proxy servers or alternative solutions.
+- [X] **Resolving IPv6 Issues with ICP Servers**: The Internet Computer (ICP) faces a primary challenge due to its advanced use of IPv6, complicating the integration of external services that rely on IPv4, such as Stripe and PayPal. Direct access to IPv4 services via IPv6 on the ICP network may necessitate the use of proxy servers or alternative solutions.
 
 - [X] **Final development of the front end to interact with the Canister API.**
 
