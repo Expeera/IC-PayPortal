@@ -4,6 +4,7 @@ module {
     // Global Messages
     public let not_authorized:Text = "Not Authorized";
     public let not_owner:Text = "You are not owner";
+    public let invalid_principal:Text = "Invalid Principal";
     public let success_operation:Text = "Success Operation";
 
     // Validation messages

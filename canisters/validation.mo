@@ -18,6 +18,11 @@ module {
         Principal.toText(caller) == "2vxsx-fae";
     };
 
+    public func isAnonymousCallerText (caller : Text) : Bool {
+         // Compare the caller's Text to a predefined value
+        caller == "2vxsx-fae";
+    };
+
     // Function to check if a text is empty
     public func isEmpty(text: Text): Bool {
         // Trim leading and trailing whitespace from the text and compare it to an empty string

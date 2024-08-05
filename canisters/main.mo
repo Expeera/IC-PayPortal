@@ -45,11 +45,29 @@ actor Fiat {
     private stable var pendingInvoiceList: List.List<Nat> = List.nil<Nat>();
 
     // Owner's identifier
-    private var owner:Text = "aungm-5m6dm-vjzon-2s7yq-u5kqw-mwdge-w3ixa-bsfm7-byb7u-pih3y-iae";
+    private var owner:Text = "63zdn-komz6-7n2yz-v2oaz-o5wv2-teeo3-s6l43-ibflh-yxmsk-xk3su-yae";
 
     // Owner's identifier
     public func getOwner() : async Text {
         return owner
+    };
+
+    public shared({caller}) func setOwner(newOwner : Text) : async Http.Response<Http.ResponseStatus<Bool, {}>> {
+
+        if (not(Validation.isEqual(owner, Principal.toText(caller)))) {
+            return Utils.generalResponse(false, Messages.not_owner, #err({}), Http.Status.UnprocessableEntity);
+        };
+
+        if (Validation.isAnonymousCallerText(newOwner)) {
+            return Utils.generalResponse(false, Messages.invalid_principal, #err({}), Http.Status.UnprocessableEntity);
+        };
+
+        owner := newOwner;
+
+        return Utils.generalResponse(true, 
+                    Messages.success_operation,
+                    #success(true), 
+                    Http.Status.OK);
     };
 
     // Check if the caller is the owner

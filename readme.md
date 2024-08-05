@@ -230,8 +230,15 @@ invoice_count: () : Nat
 
 The `invoice_count` function is a query that takes no input parameters and returns a single natural number (nat). This function is designed to retrieve the total count of invoices in the system. It provides a convenient way for users or administrators to obtain the current number of invoices present, assisting in various statistical analyses or monitoring the growth of invoices over time. For implementation details, refer to the actual code and any accompanying documentation, which may include optimizations and other relevant information.
 
+### 7. Set Owner:
 
-### 7. Is Owner:
+```motoko
+setOwner(newOwner : Text) : async Http.Response<Http.ResponseStatus<Bool, {}>>
+```
+
+The `setOwner` function is designed to change the owner of a canister within the system. It is a public and shared asynchronous function, meaning it can be called externally and supports inter-canister calls. This function takes a single parameter, newOwner, which is a Text value representing the new owner's identifier, and returns a response indicating the success or failure of the operation.
+
+### 8. Is Owner:
 
 ```motoko
 is_owner: () : Bool
@@ -242,3 +249,58 @@ The `is_owner` query function is designed to check if the caller (current user) 
 This query is crucial for implementing access control and security measures within the system. By calling the isOwner query, users can verify their privileges to perform certain actions or access specific functionalities restricted to the owner or administrators only.
 
 For a comprehensive understanding of the implementation, including the specific checks and validation performed by this query, please refer to the actual code and any accompanying documentation. This will provide insights into how the ownership or administrative status is determined and utilized in the broader context of the application.
+
+## 🗺️ Roadmap
+
+### Milestone 1:
+
+- [x] **Setup Development Environment**: Ensure all necessary tools and environments are ready for development.
+
+- [x] **Design Core Functions**: Plan and design the main functionalities of the fiat payment module.
+
+- [x] **Implement Core Functions**: Develop the essential features of the payment module.
+
+- [x] **Integrate Payment Service Providers**: Connect the module with popular payment gateways like Stripe and Paypal.
+
+- [x] **Conduct Unit Testing**: Perform initial testing to ensure the core functions work as expected.
+
+
+### Milestone 2:
+
+- [x] **Complete Implementation of Core Functions**: Finish the development of all primary features.
+
+- [x] **Integrate with at least Two Payment Service Providers**: Ensure the module works seamlessly with at least two different payment gateways.
+
+- [x] **Provide Comprehensive Documentation**: Create detailed documentation covering the usage and implementation of the module.
+
+- [x] **Submit Progress Report and Demo**: Prepare and submit a report outlining progress and a demo showcasing the module's capabilities.
+
+
+### Milestone 3:
+
+- [x] **Polish for Performance, Security, and Reliability**: Refine the module to enhance its performance, security, and reliability.
+
+- [x] **Implement Additional Features Based on Feedback**: Add any extra features requested or suggested during the project.
+
+- [x] **Finalize Documentation**: Complete the documentation, ensuring it covers all aspects of the module.
+
+- [x] **Present Final Demo and Code Delivery**: Provide a final demonstration of the module and deliver the complete codebase.
+
+- [X] **Resolving IPv6 Issues with ICP Servers**: The Internet Computer (ICP) faces a primary challenge due to its lack of support for IPv4, complicating the integration of external services that rely on IPv4, such as Stripe and PayPal. Direct access to IPv4 services via IPv6 on the ICP network may necessitate the use of proxy servers or alternative solutions.
+
+- [X] **Final development of the front end to interact with the Canister API.**
+
+- [x] **Prepare for Open Sourcing**: 
+    - Review and ensure all code is properly commented and follows standard coding conventions.
+
+    - Prepare a comprehensive README file detailing the project, its installation, and usage.
+
+    - Create an open-source license that protects the project and contributors while allowing for desired access and collaboration.
+
+## License
+Distributed under the MIT License. See `LICENSE` for more information.
+
+
+## References
+- [Internet Computer](https://internetcomputer.org)
+- [motoko by example](https://github.com/dfinity/examples/tree/master/motoko) - An officially maintained collection of short Motoko examples.
