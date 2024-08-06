@@ -8,6 +8,7 @@ module {
     public let success_operation:Text = "Success Operation";
 
     // Validation messages
+    public let owner_is_required:Text = "The new owner is required";
     public let payment_method_is_required:Text = "The payment method is required";
     public let payment_method_invalid_value:Text = "The Payment method Invalid value";
     public let currency_is_required:Text = "The currency is required";

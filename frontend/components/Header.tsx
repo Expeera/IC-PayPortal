@@ -7,25 +7,13 @@ import { AppContext } from "../App"
 import { Button, Modal } from "react-bootstrap"
 import { toast } from "react-toastify"
 
-/**
- * Header Component
- *
- * This component renders the header of the webpage, which includes the logo,
- * navigation links, and user actions like logout and admin settings.
- *
- * @param {Function} handlePageView - Function to handle page navigation
- * @param {Boolean} isAdmin - Flag indicating if the user is an admin
- */
 const Header = ({ handlePageView, isAdmin }) => {
-  const { logout, isAuthenticated } = useContext(AppContext) // Accessing logout and authentication status from AppContext
-
+  const { logout, isAuthenticated, actor } = useContext(AppContext)
   const [show, setShow] = useState(false) // State to control the visibility of the modal
-
   const handleClose = () => setShow(false) // Function to close the modal
   const handleShow = () => setShow(true) // Function to show the modal
   const navigate = useNavigate() // Hook for navigation
   const [owner, setOwner] = useState("") // State to manage the owner input value
-
   // Function to handle input changes in the modal form
   const handleInputChange = (e) => {
     setOwner(e.target.value)
@@ -34,17 +22,18 @@ const Header = ({ handlePageView, isAdmin }) => {
   // Function to handle form submission in the modal
   const handleSubmit = async (e) => {
     e.preventDefault()
-    try {
-      // Simulate an API call to change the owner
-      const response = { status: true, message: "Owner changed successfully" }
 
+    try {
+      const response = await actor.setOwner(owner)
       if (response.status) {
-        toast.success(response.message) // Display success message
+        toast.success(response.message)
+        navigate("/auth/login")
       } else {
-        toast.error(response.message) // Display error message if unsuccessful
+        toast.error(response.message)
       }
-    } catch (error) {
-      toast.error("An error occurred") // Display error message on failure
+    } catch (err) {
+      console.log({ err })
+      toast.error(err.message)
     }
   }
 
