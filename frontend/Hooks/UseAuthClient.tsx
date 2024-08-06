@@ -1,47 +1,55 @@
-//courtesy of ic-avatar example code
-import { ActorSubclass, Actor, HttpAgent } from "@dfinity/agent"
-import { AuthClient } from "@dfinity/auth-client"
-import { canisterId, createActor } from "../declarations/fiat"
-
-import { _SERVICE } from "../declarations/fiat/fiat.did"
-import react, { useEffect, useState } from "react"
-import { Principal } from "@dfinity/principal"
-import { toast } from "react-toastify"
-import { useNavigate } from "react-router-dom"
+// Courtesy of IC-avatar example code
+import { ActorSubclass } from "@dfinity/agent" // Importing types and classes from DFINITY's agent package.
+import { AuthClient } from "@dfinity/auth-client" // Importing the AuthClient class for handling authentication.
+import { canisterId, createActor } from "../declarations/fiat" // Importing the canister ID and actor creation function.
+import { _SERVICE } from "../declarations/fiat/fiat.did" // Importing the TypeScript definition of the canister service.
+import { useEffect, useState } from "react" // Importing hooks from React for state management and side effects.
+import { Principal } from "@dfinity/principal" // Importing the Principal type from DFINITY's principal package.
+import { toast } from "react-toastify" // Importing toast notifications for user feedback.
 
 type UseAuthClientProps = {}
 
 export interface Invoice {
-  id: number;
-  owner: Principal;
-  amount: number;
-  status: string;
-  transactionId: string;
-  paymentLink: string;
-  paymentMethod: string;
-  currency: string;
-  createdAt: number;
+  id: number
+  owner: Principal
+  amount: number
+  status: string
+  transactionId: string
+  paymentLink: string
+  paymentMethod: string
+  currency: string
+  createdAt: number
 }
 
+/**
+ * Custom hook that manages the authentication state and interactions with the DFINITY canister.
+ */
 export function useAuthClient(props?: UseAuthClientProps) {
-  const [authClient, setAuthClient] = useState<AuthClient>()
-  const [actor, setActor] = useState<ActorSubclass<_SERVICE>>()
+  // State variables to manage authentication, actor, and loading state.
+  const [authClient, setAuthClient] = useState<AuthClient>() // AuthClient instance for managing user authentication.
+  const [actor, setActor] = useState<ActorSubclass<_SERVICE>>() // Actor instance for interacting with the canister.
 
-  const [isAuthenticated, setIsAuthenticated] = useState<null | boolean>(null)
-  const [hasLoggedIn, setHasLoggedIn] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [loadingUser, setLoadingUser] = useState(false)
-  const [accountId, setAccountId] = useState("")
-  const [balance, setBalance] = useState("")
-  const [pageView, setPageView] = useState("products");
-  const [productSelected, setProductSelected] = useState("products");
+  const [isAuthenticated, setIsAuthenticated] = useState<null | boolean>(null) // Tracks if the user is authenticated.
+  const [hasLoggedIn, setHasLoggedIn] = useState(false) // Tracks if the user has logged in.
+  const [loading, setLoading] = useState(false) // Tracks if an action is in progress.
+  const [loadingUser, setLoadingUser] = useState(false) // Tracks if the user information is being loaded.
+  const [balance, setBalance] = useState("") // Stores the user's balance (currently unused).
+  const [pageView, setPageView] = useState("products") // Tracks the current page view.
+  const [productSelected, setProductSelected] = useState("products") // Tracks the currently selected product.
 
-  const handlePageView = (page, productDetails) => {
-    setPageView(page);
-    setProductSelected(productDetails);
-  };
-  // const [leasePricePerDay, setLeasePricePerDay] = useState<BigInt>()
+  /**
+   * Handles changing the page view and selected product.
+   * @param page The page to view.
+   * @param productDetails Optional details of the selected product.
+   */
+  const handlePageView = (page: string, productDetails?: any) => {
+    setPageView(page)
+    setProductSelected(productDetails)
+  }
 
+  /**
+   * Initializes the AuthClient instance and checks if the user is authenticated.
+   */
   const initializeAuthClient = (): Promise<void> => {
     return AuthClient.create({
       idleOptions: {
@@ -53,55 +61,54 @@ export function useAuthClient(props?: UseAuthClientProps) {
       if (!isAuthenticated) {
         const isAuthenticated = await client.isAuthenticated()
         setIsAuthenticated(isAuthenticated)
-        console.log("setIsAuthenticated", isAuthenticated)
       }
     })
   }
-  const login = (cb) => {
+
+  /**
+   * Handles the login process, including setting up the actor and redirecting to the checkout page.
+   * @param cb Callback function for handling the post-login redirect.
+   */
+  const login = (cb: (path: string) => void) => {
     setLoading(true)
 
     const days = BigInt(1)
     const hours = BigInt(24)
     const nanoseconds = BigInt(3600000000000)
-    console.log(isAuthenticated, "isauthhhhh")
-
     authClient?.login({
       identityProvider: process.env.II_URL,
       maxTimeToLive: days * hours * nanoseconds,
       onSuccess: async () => {
-        // if (!isAuthenticated) {
-          console.log("here2")
-          cb("/checkout")
-          toast.info("Login successful")
-          setIsAuthenticated(true)
-          setTimeout(() => {
-            setHasLoggedIn(true)
-          }, 100)
-          await initActor()
-        // }
+        cb("/checkout")
+        toast.info("Login successful")
+        setIsAuthenticated(true)
+        setTimeout(() => {
+          setHasLoggedIn(true)
+        }, 100)
+        await initActor() // Initialize the actor after successful login.
       },
       onError: (err) => {
-        toast.error("failed to login , please try again later")
+        toast.error("Failed to login, please try again later")
         console.log(err)
         setLoading(false)
       },
     })
   }
 
-  const isOwner = async () => {
+  /**
+   * Checks if the authenticated user is the owner.
+   * @returns A promise that resolves to a boolean indicating if the user is an owner.
+   */
+  const isOwner = async (): Promise<boolean> => {
     if (!actor) return false
-
     const checkOwner = await actor.is_owner()
-    console.log("checkOwner: ", {
-      checkOwner,
-    })
     return checkOwner
   }
 
+  /**
+   * Initializes the actor for interacting with the canister, including setting up identity and checking ownership.
+   */
   const initActor = async () => {
- 
-    // if (user) return
-    console.log({ auth: await authClient.isAuthenticated() })
     try {
       const actor = createActor(canisterId as string, {
         agentOptions: {
@@ -109,33 +116,27 @@ export function useAuthClient(props?: UseAuthClientProps) {
         },
       })
       setActor(actor)
-
-      // var accountId = await actor.getAccountId()
-      // console.log("GetAccountId", accountId)
-      // setAccountId(accountId)
-
-      var isOwnerVal = await isOwner();
-      console.log("isOwner", isOwnerVal);
-
+      const isOwnerVal = await isOwner()
       if (authClient) {
-        console.log("aaaaaaa", authClient?.getIdentity())
+        console.log("address owner", authClient.getIdentity())
       }
 
       setLoading(true)
       console.log(
-        "aaaaaaaaaaaa",
+        "address owner",
         authClient?.getIdentity().getPrincipal().toString(),
       )
-
-      
     } catch (error) {
       console.log({ error })
-      toast.info("fetching user failed, please try again later")
+      toast.info("Fetching user failed, please try again later")
     } finally {
       setLoading(false)
     }
   }
 
+  /**
+   * Logs out the user, clears local storage, and reinitializes the AuthClient.
+   */
   const logout = async () => {
     localStorage.clear()
     sessionStorage.clear()
@@ -147,16 +148,23 @@ export function useAuthClient(props?: UseAuthClientProps) {
     toast.info("Logout successful")
   }
 
+  /**
+   * Effect hook that runs once on component mount to initialize the AuthClient.
+   */
   useEffect(() => {
     initializeAuthClient()
   }, [])
 
+  /**
+   * Effect hook that runs when `isAuthenticated` changes to initialize the actor if the user is authenticated.
+   */
   useEffect(() => {
     if (isAuthenticated) {
       initActor()
     }
   }, [isAuthenticated])
 
+  // Return the authentication state and functions to be used by components.
   return {
     authClient,
     setAuthClient,
