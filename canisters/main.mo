@@ -45,7 +45,7 @@ actor Fiat {
     private stable var pendingInvoiceList: List.List<Nat> = List.nil<Nat>();
 
     // Owner's identifier
-    private var owner:Text = "hsbjl-dy6pv-yqk4f-pjv5b-mjfs4-7snpr-p42iy-jxrg5-3lzqu-zh6cf-2qe 1";
+    private var owner:Text = "vm3ub-w2pbo-ok2ox-famss-6b732-fqtat-klxbe-xcrni-iy3uk-yiaps-lae";
 
     // Owner's identifier
     public func getOwner() : async Text {
@@ -54,15 +54,17 @@ actor Fiat {
 
     public shared({caller}) func setOwner(newOwner : Text) : async Http.Response<Http.ResponseStatus<Bool, {}>> {
 
-        if (not(Validation.isEqual(owner, Principal.toText(caller)))) {
-            return Utils.generalResponse(false, Messages.not_owner, #err({}), Http.Status.UnprocessableEntity);
-        };
+        let newOwnerTemp = Text.trim(newOwner, #char ' ');
 
-        if (Validation.isAnonymousCallerText(newOwner)) {
+        if (Validation.isEmpty(newOwnerTemp)) {
+            return Utils.generalResponse(false, Messages.owner_is_required, #err({}), Http.Status.UnprocessableEntity)
+        }else  if (not(Validation.isEqual(owner, Principal.toText(caller)))) {
+            return Utils.generalResponse(false, Messages.not_owner, #err({}), Http.Status.UnprocessableEntity);
+        }else if (Validation.isAnonymousCallerText(newOwnerTemp)) {
             return Utils.generalResponse(false, Messages.invalid_principal, #err({}), Http.Status.UnprocessableEntity);
         };
 
-        owner := newOwner;
+        owner := newOwnerTemp;
 
         return Utils.generalResponse(true, 
                     Messages.success_operation,

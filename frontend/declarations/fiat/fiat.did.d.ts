@@ -63,11 +63,11 @@ export interface Response {
   'status_code' : StatusCode,
 }
 export type ResponseStatus = { 'err' : {} } |
-  { 'success' : Array<Invoice> };
-export type ResponseStatus_1 = { 'err' : {} } |
-  { 'success' : CreateInvoiceBody__1 };
-export type ResponseStatus_2 = { 'err' : {} } |
   { 'success' : boolean };
+export type ResponseStatus_1 = { 'err' : {} } |
+  { 'success' : Array<Invoice> };
+export type ResponseStatus_2 = { 'err' : {} } |
+  { 'success' : CreateInvoiceBody__1 };
 export type ResponseStatus_3 = { 'err' : {} } |
   { 'success' : ConfirmInvoiceBody__1 };
 export interface Response_1 {
@@ -97,14 +97,15 @@ export interface _SERVICE {
   'change_invoice_status' : ActorMethod<[ConfirmInvoiceBody], Response_3>,
   'change_invoice_status_to_admin' : ActorMethod<
     [ConfirmInvoiceAdminBody],
-    Response_2
+    Response
   >,
-  'create_invoice' : ActorMethod<[CreateInvoiceBody], Response_1>,
+  'create_invoice' : ActorMethod<[CreateInvoiceBody], Response_2>,
   'getOwner' : ActorMethod<[], string>,
   'get_actor_id_as_text' : ActorMethod<[], string>,
-  'get_all_invoices_to_admin' : ActorMethod<[], Response>,
-  'get_my_invoices' : ActorMethod<[], Response>,
+  'get_all_invoices_to_admin' : ActorMethod<[], Response_1>,
+  'get_my_invoices' : ActorMethod<[], Response_1>,
   'invoice_count' : ActorMethod<[], bigint>,
   'is_owner' : ActorMethod<[], boolean>,
+  'setOwner' : ActorMethod<[string], Response>,
   'transform' : ActorMethod<[TransformArgs], CanisterHttpResponsePayload>,
 }

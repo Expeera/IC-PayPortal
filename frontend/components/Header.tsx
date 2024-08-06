@@ -8,7 +8,7 @@ import { Button, Modal } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 
 const Header = ({ handlePageView,isAdmin }) => {
-  const { logout,isAuthenticated } = useContext(AppContext)
+  const { logout,isAuthenticated, actor } = useContext(AppContext)
 
   const [show, setShow] = useState(false)
 
@@ -24,15 +24,21 @@ const Header = ({ handlePageView,isAdmin }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Simulate an API call to change the owner
-      // Replace the below code with your actual API call
-      const response = { status: true, message: "Owner changed successfully" };
       
-      if (response.status) {
-        toast.success(response.message);
-      } else {
-        toast.error(response.message);
+      
+      try {
+        const response = await actor.setOwner(owner);
+        if (response.status) {
+          toast.success(response.message);
+          navigate("/auth/login")
+        } else {
+          toast.error(response.message);
+        }
+      } catch (err) {
+        console.log({ err });
+        toast.error(err.message);
       }
+
     } catch (error) {
       toast.error("An error occurred");
     }

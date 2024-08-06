@@ -33,17 +33,17 @@ type ResponseStatus_3 =
 type ResponseStatus_2 = 
  variant {
    err: record {};
-   success: bool;
+   success: CreateInvoiceBody__1;
  };
 type ResponseStatus_1 = 
  variant {
    err: record {};
-   success: CreateInvoiceBody__1;
+   success: vec Invoice;
  };
 type ResponseStatus = 
  variant {
    err: record {};
-   success: vec Invoice;
+   success: bool;
  };
 type Response = 
  record {
@@ -125,13 +125,14 @@ type CanisterHttpResponsePayload =
  };
 service : {
   change_invoice_status: (ConfirmInvoiceBody) -> (Response_3);
-  change_invoice_status_to_admin: (ConfirmInvoiceAdminBody) -> (Response_2);
-  create_invoice: (CreateInvoiceBody) -> (Response_1);
+  change_invoice_status_to_admin: (ConfirmInvoiceAdminBody) -> (Response);
+  create_invoice: (CreateInvoiceBody) -> (Response_2);
   getOwner: () -> (text);
   get_actor_id_as_text: () -> (text) query;
-  get_all_invoices_to_admin: () -> (Response) query;
-  get_my_invoices: () -> (Response) query;
+  get_all_invoices_to_admin: () -> (Response_1) query;
+  get_my_invoices: () -> (Response_1) query;
   invoice_count: () -> (nat) query;
   is_owner: () -> (bool) query;
+  setOwner: (text) -> (Response);
   transform: (TransformArgs) -> (CanisterHttpResponsePayload) query;
 }

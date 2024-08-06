@@ -1,13 +1,13 @@
-# 🚧 Expeera Module for Motoko
+# 🚧 IC-PayPortal Motoko
 
-The Expeera Module for Motoko is a library that provides developers with a set of functions for managing Expeeras on the Internet Computer Protocol (ICP). This module enables seamless integration of popular Expeera gateways such as `Stripe` and `Paypal` into Motoko applications.
+The IC-PayPortal Motoko is a library that provides developers with a set of functions for managing Expeeras on the Internet Computer Protocol (ICP). This module enables seamless integration of popular Expeera gateways such as `Stripe` and `Paypal` into Motoko applications.
 
 [Live Demo](https://3356i-cqaaa-aaaao-axdqa-cai.icp0.io/): https​&#65279;://3356i-cqaaa-aaaao-axdqa-cai.icp0.io
 
 [The base URL of the payment service: ](https://ipv6.mcti.io) 
 https​&#65279;://ipv6.mcti.io
 
-
+[Fiat Payment ICP Laravel project](https://github.com/Expeera/Fiat-Payment-ICP-Laravel) 
 
 
 ## Features
