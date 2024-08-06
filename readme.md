@@ -1,6 +1,6 @@
 # 🚧 IC-PayPortal Motoko
 
-The IC-PayPortal Motoko is a library that provides developers with a set of functions for managing Expeeras on the Internet Computer Protocol (ICP). This module enables seamless integration of popular Expeera gateways such as `Stripe` and `Paypal` into Motoko applications.
+The IC-PayPortal Motoko is a library that provides developers with a set of functions for managing fiat payments on the Internet Computer Protocol (ICP). This module enables seamless integration of popular fiat gateways such as `Stripe` and `Paypal` into Motoko applications.
 
 [Live Demo](https://3356i-cqaaa-aaaao-axdqa-cai.icp0.io/): https​&#65279;://3356i-cqaaa-aaaao-axdqa-cai.icp0.io
 
