@@ -229,6 +229,7 @@ export default function Form() {
             window.open(data.body.success.payment.redirectUrl, "_blank")
           }
           toast.success(data.message)
+          navigate("/my-invoices")
         } else {
           toast.error(data.message)
         }
