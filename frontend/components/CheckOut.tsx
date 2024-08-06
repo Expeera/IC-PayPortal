@@ -101,7 +101,13 @@ const CheckOut = ({
                           </span>{" "}
                           {/* Product name and price */}
                         </h5>
-                        <p className="card-text">{product.description}</p>{" "}
+
+                        <p className="card-text">
+                          {product.description.length > 50
+                            ? `${product.description.slice(0, 50)}...`
+                            : product.description}
+                        </p>
+
                         {/* Product description */}
                       </div>
                       <div className="quantityPrice">
