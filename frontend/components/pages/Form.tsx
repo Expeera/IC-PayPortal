@@ -62,51 +62,51 @@ export default function Form() {
   const [products, setProducts] = useState([
     {
       id: 1,
-      name: "Product 1",
+      name: "Sea Turtle",
       price: (10 + Math.random() * 190).toFixed(2),
       image: product1,
       description:
-        "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+        "This digital artwork features a brightly colored sea turtle swimming underwater.",
     },
     {
       id: 2,
-      name: "Product 2",
+      name: "Pop Palm Tree",
       price: (10 + Math.random() * 190).toFixed(2),
       image: product2,
       description:
-        "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+        "Vibrant digital collage with a central palm tree silhouette set against a backdrop bursting with colorful abstract elements.",
     },
     {
       id: 3,
-      name: "Product 3",
+      name: "Streety Gold Fragrance",
       price: (10 + Math.random() * 190).toFixed(2),
       image: product3,
       description:
-        "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+        "A luxurious fusion of high fashion and street art, the iconic Chanel No. ",
     },
     {
       id: 4,
-      name: "Product 4",
+      name: "Hussle Hard",
       price: (10 + Math.random() * 190).toFixed(2),
       image: product4,
       description:
-        "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+        "The image features a vibrant, colorful background with abstract shapes and swirls in shades of orange,",
     },
     {
       id: 5,
-      name: "Product 5",
+      name: "Colorful Cher",
       price: (10 + Math.random() * 190).toFixed(2),
       image: product5,
       description:
-        "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+        "A colorful portrait of Cher with exaggerated makeup is blended with psychedelic patterns and floral designs.",
     },
     {
       id: 6,
-      name: "Product 6",
+      name: "Wake Up",
       price: (10 + Math.random() * 190).toFixed(2),
       image: product6,
       description:
-        "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+        "Splashes of color collide in a vibrant chaos in this bold pop art collage.",
     },
   ])
 

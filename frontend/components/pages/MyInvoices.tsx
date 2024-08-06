@@ -166,7 +166,7 @@ export default function MyInvoices() {
           </Col>
 
           {/* Modal to display selected invoice details */}
-          <Modal show={show} onHide={handleClose} size="lg">
+          <Modal show={show} onHide={handleClose} size="lg" centered>
             <Modal.Header closeButton>
               <Modal.Title>Invoice No: {selectedInvoiceId}</Modal.Title>
             </Modal.Header>
