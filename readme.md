@@ -1,6 +1,6 @@
 # 🚧 IC-PayPortal Motoko
 
-The IC-PayPortal Motoko is a library that provides developers with a set of functions for managing fiat payments on the Internet Computer Protocol (ICP). This module enables seamless integration of popular fiat gateways such as `Stripe` and `Paypal` into Motoko applications.
+The IC-PayPortal Motoko is a library that provides developers with a set of functions for managing fiat payments on the Internet Computer Protocol (ICP). This module enables seamless integration of popular fiat payment gateways such as `Stripe` and `Paypal` into Motoko applications.
 
 [Live Demo](https://3356i-cqaaa-aaaao-axdqa-cai.icp0.io/): https​&#65279;://3356i-cqaaa-aaaao-axdqa-cai.icp0.io
 
@@ -12,10 +12,10 @@ https​&#65279;://ipv6.mcti.io
 
 ## Features
 
-The Expeera Module offers the following features:
+The IC-PayPortal Module offers the following features:
 
 - ### Payment Gateway Integration: 
-    The module supports integration with popular Expeera gateways, allowing developers to accept payments from various sources.
+    The module supports integration with popular fiat payment gateways, allowing developers to accept payments from various sources.
 
 - ### Payment Processing:
     It provides functions to handle payment processing tasks, such as creating payment requests, verifying transactions, and handling callbacks.
@@ -108,7 +108,7 @@ The Expeera Module offers the following features:
 9. To test run `sh test/demo.sh`
 
 ### 🕹️ API`s
-Here is a step-by-step guide on how to use the `Expeera` Module:
+Here is a step-by-step guide on how to use the `IC-PayPortal` Module:
 
 ### 1. Create New Invoice:
 
@@ -298,7 +298,7 @@ For a comprehensive understanding of the implementation, including the specific 
     - Create an open-source license that protects the project and contributors while allowing for desired access and collaboration.
 
 ## License
-Distributed under the MIT License. See `LICENSE` for more information.
+Distributed under the MIT License. See [`LICENSE`](https://en.m.wikipedia.org/wiki/MIT_License) for more information.
 
 
 ## References
