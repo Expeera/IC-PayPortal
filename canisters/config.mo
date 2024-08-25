@@ -18,7 +18,7 @@ module {
         http= "https://";
     };
 
-    private let config = liveConfig;
+    private let config = devConfig;
 
     // Function to generate the Stripe success URL for a specific invoice
     public func get_stripe_success_url (invoiceNo:Nat): Text { 
