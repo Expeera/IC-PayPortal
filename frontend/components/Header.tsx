@@ -4,7 +4,7 @@ import "./Header.css"
 import Logo from "../assets/logo.svg"
 import { Link, useNavigate } from "react-router-dom"
 import { AppContext } from "../App"
-import { Button, Modal } from "react-bootstrap"
+import { Button, Modal, Collapse } from "react-bootstrap"
 import { toast } from "react-toastify"
 
 const Header = ({ handlePageView, isAdmin }) => {
@@ -14,6 +14,8 @@ const Header = ({ handlePageView, isAdmin }) => {
   const handleShow = () => setShow(true) // Function to show the modal
   const navigate = useNavigate() // Hook for navigation
   const [owner, setOwner] = useState("") // State to manage the owner input value
+  const [open, setOpen] = useState(false) // State to control collapse
+
   // Function to handle input changes in the modal form
   const handleInputChange = (e) => {
     setOwner(e.target.value)
@@ -55,17 +57,20 @@ const Header = ({ handlePageView, isAdmin }) => {
         <button
           className="navbar-toggler"
           type="button"
-          data-toggle="collapse"
-          data-target="#navbar-nav"
           aria-controls="navbar-nav"
-          aria-expanded="false"
+          aria-expanded={open}
           aria-label="Toggle navigation"
+          onClick={() => setOpen(!open)}
         >
           <span className="navbar-toggler-icon"></span>
         </button>
 
-        {/* Navigation links */}
-        <div className="collapse navbar-collapse flex-grow-0" id="navbar-nav">
+        {/* Collapsible navigation links */}
+        <Collapse
+          in={open}
+          className="navbar-collapse flex-grow-0"
+          id="navbar-nav"
+        >
           <div className="navbar-nav ml-auto">
             {isAuthenticated && (
               <>
@@ -106,7 +111,7 @@ const Header = ({ handlePageView, isAdmin }) => {
               </>
             )}
           </div>
-        </div>
+        </Collapse>
       </div>
 
       {/* Modal for changing the owner */}
